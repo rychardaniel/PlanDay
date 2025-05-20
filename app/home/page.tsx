@@ -6,6 +6,9 @@ export default function Home() {
         <div>
             <Button variant="contained">Botão do Material UI</Button>
             <AcUnitIcon />
+            <h1>Fonte h1</h1>
+            <h2>Fonte h2</h2>
+            <p>Paragrafo</p>
         </div>
     );
 }
