@@ -1,17 +1,9 @@
-import Button from "@mui/material/Button";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
-
 export function Body() {
     return (
-        <div>
-            <h2>Body</h2>
-            <div>
-                <Button variant="contained">Botão do Material UI</Button>
-                <AcUnitIcon />
-                <h1>Fonte h1</h1>
-                <h2>Fonte h2</h2>
-                <p>Paragrafo</p>
+        <main className="bg-zinc-950 flex-1 flex justify-center p-8">
+            <div className="bg-zinc-900 rounded-3xl w-full flex-1 p-4">
+                ocupa 100 do main
             </div>
-        </div>
+        </main>
     );
 }
