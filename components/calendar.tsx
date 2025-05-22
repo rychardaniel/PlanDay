@@ -1,10 +1,7 @@
-import { HeaderCalendar } from "./header-calendar";
+"use client";
+
 import { MonthViewCalendar } from "./month-view-calendar";
 
 export function Calendar() {
-    return (
-        <div>
-            <MonthViewCalendar />
-        </div>
-    );
+    return <MonthViewCalendar />;
 }
