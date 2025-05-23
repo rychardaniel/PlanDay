@@ -2,6 +2,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Avatar, Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Link from "next/link";
+import ThemeToggleButton from "./ThemeToggleButton";
 
 export function Header() {
     return (
@@ -14,6 +15,7 @@ export function Header() {
                     <h2 className="text-2xl cursor-default">Calendar</h2>
                 </div>
                 <div className="flex flex-row gap-2 items-center">
+                    <ThemeToggleButton />
                     <Button color="info">
                         <SettingsIcon />
                     </Button>
