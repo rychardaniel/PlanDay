@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@/theme/ThemeContext";
 import MuiWrapper from "@/theme/MuiWrapper";
 import "./globals.css";
+import { LoadingProvider } from "@/context/LoadingContext";
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -42,7 +43,9 @@ export default function RootLayout({
             >
                 <AppRouterCacheProvider>
                     <ThemeProvider>
-                        <MuiWrapper>{children}</MuiWrapper>
+                        <MuiWrapper>
+                            <LoadingProvider>{children}</LoadingProvider>
+                        </MuiWrapper>
                     </ThemeProvider>
                 </AppRouterCacheProvider>
             </body>
