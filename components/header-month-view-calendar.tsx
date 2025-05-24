@@ -10,8 +10,8 @@ export function HeaderMounthViewCalendar() {
     ];
 
     return (
-        <div className="w-full pl-0.5 mb-2">
-            <ul className="grid grid-cols-7 gap-1 pr-2">
+        <div className="w-full px-0.5 mb-2">
+            <ul className="grid grid-cols-7 gap-1">
                 {days.map((day) => (
                     <li
                         key={day.id}

@@ -20,6 +20,7 @@ type Props = {
 export function BodyMonthViewCalendar({ currentDate }: Props) {
     const [clientDate, setClientDate] = useState<Date | null>(null);
 
+    // Define a data atual apenas no cliente, evitando problemas com fuso horário
     useEffect(() => {
         setClientDate(new Date());
     }, []);

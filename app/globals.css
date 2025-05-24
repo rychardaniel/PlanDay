@@ -25,3 +25,13 @@ body {
     background: #888;
     border-radius: 10px;
 }
+
+/* Esconde scrollbar para todos os navegadores modernos */
+.scrollbar-hidden {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}

@@ -90,11 +90,15 @@ export function MonthViewCalendar() {
     return (
         <>
             <HeaderMounthViewCalendar />
-            <Button onClick={centerCurrentMonth}>Recentralizar</Button>
+            <div className="absolute flex justify-end right-0 pr-4">
+                <Button onClick={centerCurrentMonth} size="small">
+                    Recentralizar
+                </Button>
+            </div>
 
             <div
                 ref={scrollContainerRef}
-                className="h-full overflow-y-auto overflow-x-hidden pb-9"
+                className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden pb-9"
                 onScroll={handleScroll}
             >
                 {months.map((month, index) => {
