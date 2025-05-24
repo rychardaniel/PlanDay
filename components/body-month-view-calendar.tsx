@@ -57,7 +57,7 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                     {week.map((date, di) => (
                         <div
                             key={di}
-                            className={`h-18 p-2 text-sm flex flex-col items-start ${
+                            className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
                                 isSameMonth(date, currentDate)
                                     ? "bg-zinc-200 dark:bg-zinc-800 border"
                                     : ""
