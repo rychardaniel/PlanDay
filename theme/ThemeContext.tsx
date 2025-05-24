@@ -19,7 +19,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const stored = localStorage.getItem("theme") as ThemeMode | null;
-        const initial = stored || "light";
+        const initial = stored || "dark";
         setMode(initial);
         document.documentElement.classList.toggle("dark", initial === "dark");
     }, []);
