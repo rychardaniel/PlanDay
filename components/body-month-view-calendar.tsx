@@ -52,12 +52,12 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                             key={di}
                             className={`h-18 p-2 text-sm flex flex-col items-start ${
                                 isSameMonth(date, currentDate)
-                                    ? "bg-zinc-800 border"
+                                    ? "bg-zinc-200 dark:bg-zinc-800 border"
                                     : ""
                             } ${
                                 isSameDay(date, new Date())
-                                    ? "border-blue-500"
-                                    : "border-zinc-950"
+                                    ? "border-blue-500 border-2 dark:border"
+                                    : "border-white dark:border-zinc-950"
                             }`}
                         >
                             {isSameMonth(date, currentDate) ? (

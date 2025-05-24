@@ -6,7 +6,7 @@ import ThemeToggleButton from "./ThemeToggleButton";
 
 export function Header() {
     return (
-        <header className="dark:bg-zinc-800 bg-zinc-100 w-full py-2 px-6 flex justify-center">
+        <header className="dark:bg-zinc-800 bg-zinc-200 w-full py-2 px-6 flex justify-center">
             <div className="flex flex-row justify-between w-full max-w-[1400px]">
                 <div className="flex flex-row gap-2 items-center">
                     <Link href={"/calendar"}>

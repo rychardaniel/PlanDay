@@ -15,7 +15,7 @@ export function HeaderMounthViewCalendar() {
                 {days.map((day) => (
                     <li
                         key={day.id}
-                        className="flex justify-center items-center bg-zinc-800 rounded-md py-1 text-sm font-medium text-white border border-zinc-400"
+                        className="flex justify-center items-center bg-zinc-50 dark:bg-zinc-800 rounded-md py-1 text-sm font-medium text-black dark:text-white border border-zinc-400"
                     >
                         {day.acronym}
                     </li>
