@@ -1,8 +1,9 @@
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Avatar, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Link from "next/link";
 import ThemeToggleButton from "./ThemeToggleButton";
+import { Add } from "@mui/icons-material";
 
 export function Header() {
     return (
@@ -10,18 +11,20 @@ export function Header() {
             <div className="flex flex-row justify-between w-full max-w-[1400px]">
                 <div className="flex flex-row gap-2 items-center">
                     <Link href={"/calendar"}>
-                        <CalendarMonthIcon fontSize="large" />
+                        <CalendarMonthIcon fontSize="medium" />
                     </Link>
-                    <h2 className="text-2xl cursor-default">Calendar</h2>
+                    <h2 className="cursor-default">Calendar</h2>
                 </div>
                 <div className="flex flex-row gap-2 items-center">
-                    <ThemeToggleButton />
-                    <Button color="info">
+                    <Button color="info" size="small">
+                        <Add />
+                    </Button>
+                    <Button color="info" size="small">
                         <SettingsIcon />
                     </Button>
-                    <Button>
-                        <Avatar>U</Avatar>
-                    </Button>
+                    <div>
+                        <ThemeToggleButton />
+                    </div>
                 </div>
             </div>
         </header>
