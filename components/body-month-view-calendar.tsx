@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
     startOfMonth,
     endOfMonth,
@@ -35,6 +34,11 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
         weeks.push(week);
     }
 
+    // Função para normalizar datas, ignorando o fuso horário
+    function normalizeDate(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -55,7 +59,10 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                                     ? "bg-zinc-200 dark:bg-zinc-800 border"
                                     : ""
                             } ${
-                                isSameDay(date, new Date())
+                                isSameDay(
+                                    normalizeDate(date),
+                                    normalizeDate(new Date())
+                                )
                                     ? "border-blue-500 border-2 dark:border"
                                     : "border-white dark:border-zinc-950"
                             }`}
