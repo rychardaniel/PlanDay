@@ -11,6 +11,7 @@ import {
     isSameMonth,
     isSameDay,
 } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 type Props = {
     currentDate: Date;
@@ -38,7 +39,9 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
         <div>
             <div className="flex items-center justify-between">
                 <h2 className="text-sm sm:text-xl font-bold mt-4">
-                    {format(currentDate, "MMMM yyyy", { locale: undefined })}
+                    {format(currentDate, "MMMM yyyy", { locale: ptBR })
+                        .toLowerCase()
+                        .replace(/(^|\s)\S/g, (match) => match.toUpperCase())}
                 </h2>
             </div>
 
@@ -47,19 +50,23 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                     {week.map((date, di) => (
                         <div
                             key={di}
-                            className={`h-18 p-2 border text-sm flex flex-col items-start ${
+                            className={`h-18 p-2 text-sm flex flex-col items-start ${
                                 isSameMonth(date, currentDate)
-                                    ? "bg-zinc-800"
-                                    : "bg-zinc-600"
+                                    ? "bg-zinc-800 border"
+                                    : ""
                             } ${
                                 isSameDay(date, new Date())
                                     ? "border-blue-500"
                                     : "border-zinc-950"
                             }`}
                         >
-                            <span className="font-semibold">
-                                {format(date, "d")}
-                            </span>
+                            {isSameMonth(date, currentDate) ? (
+                                <span className="font-semibold">
+                                    {format(date, "d")}
+                                </span>
+                            ) : (
+                                <></>
+                            )}
                             {/* Aqui você pode renderizar eventos */}
                         </div>
                     ))}
