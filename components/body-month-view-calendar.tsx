@@ -11,12 +11,19 @@ import {
     isSameDay,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useEffect, useState } from "react";
 
 type Props = {
     currentDate: Date;
 };
 
 export function BodyMonthViewCalendar({ currentDate }: Props) {
+    const [clientDate, setClientDate] = useState<Date | null>(null);
+
+    useEffect(() => {
+        setClientDate(new Date());
+    }, []);
+
     const startDate = startOfWeek(startOfMonth(currentDate), {
         weekStartsOn: 0,
     });
@@ -32,11 +39,6 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
             day = addDays(day, 1);
         }
         weeks.push(week);
-    }
-
-    // Função para normalizar datas, ignorando o fuso horário
-    function normalizeDate(date: Date): Date {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
     return (
@@ -59,10 +61,7 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                                     ? "bg-zinc-200 dark:bg-zinc-800 border"
                                     : ""
                             } ${
-                                isSameDay(
-                                    normalizeDate(date),
-                                    normalizeDate(new Date())
-                                )
+                                isSameDay(date, clientDate!)
                                     ? "border-blue-500 border-2 dark:border"
                                     : "border-white dark:border-zinc-950"
                             }`}
