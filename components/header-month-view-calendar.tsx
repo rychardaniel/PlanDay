@@ -11,7 +11,7 @@ export function HeaderMounthViewCalendar() {
 
     return (
         <div className="w-full px-0.5 mb-2">
-            <ul className="grid grid-cols-7 gap-1 bg-fundo-claro-dia dark:bg-fundo-escuro-dia rounded-md">
+            <ul className="grid grid-cols-7 gap-1 bg-fundo-claro-2 dark:bg-fundo-escuro-2 rounded-md">
                 {days.map((day) => (
                     <li
                         key={day.id}

@@ -45,7 +45,7 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
     return (
         <div>
             <div className="flex flex-col items-center justify-center gap-2">
-                <hr className="w-full border-fundo-claro-dia dark:border-fundo-diferente border-[1.5px] mt-4" />
+                <hr className="w-full border-fundo-claro-2 dark:border-fundo-especial border-[1.5px] mt-4" />
                 <div className="flex gap-1">
                     <h2 className="text-sm sm:text-xl font-nornal">
                         {format(currentDate, "MMMM", { locale: ptBR })
@@ -58,7 +58,7 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                         {format(currentDate, "yyyy")}
                     </h2>
                 </div>
-                <hr className="w-full border-fundo-claro-dia dark:border-fundo-diferente border-[1.5px] mb-2" />
+                <hr className="w-full border-fundo-claro-2 dark:border-fundo-especial border-[1.5px] mb-2" />
             </div>
 
             {weeks.map((week, wi) => (
@@ -68,7 +68,7 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                             key={di}
                             className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
                                 isSameMonth(date, currentDate)
-                                    ? "bg-fundo-claro-dia dark:bg-fundo-escuro-dia border"
+                                    ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
                                     : ""
                             } ${
                                 isSameDay(date, clientDate!)
