@@ -24,8 +24,17 @@ export function useEvents(displayedMonths: Date[]) {
                     const updated = { ...eventsByDate };
                     data.events.forEach((ev) => {
                         const key = ev.date;
-                        if (!updated[key]) updated[key] = [];
-                        updated[key].push(ev);
+                        if (!updated[key]) {
+                            updated[key] = [];
+                        }
+                        // Verifica se um evento com o mesmo ID já existe para esta data
+                        if (
+                            !updated[key].some(
+                                (existingEvent) => existingEvent.id === ev.id
+                            )
+                        ) {
+                            updated[key].push(ev);
+                        }
                     });
                     setEvents(updated);
                     setFetchedRanges((ranges) => [...ranges, { start, end }]);
