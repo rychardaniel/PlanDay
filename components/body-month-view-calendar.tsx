@@ -15,9 +15,10 @@ import { useEffect, useState } from "react";
 
 type Props = {
     currentDate: Date;
+    eventsByDate: EventsByDate;
 };
 
-export function BodyMonthViewCalendar({ currentDate }: Props) {
+export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
     const [clientDate, setClientDate] = useState<Date | null>(null);
 
     // Define a data atual apenas no cliente, evitando problemas com fuso horário
@@ -63,27 +64,41 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
 
             {weeks.map((week, wi) => (
                 <div key={wi} className="grid grid-cols-7">
-                    {week.map((date, di) => (
-                        <div
-                            key={di}
-                            className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
-                                isSameMonth(date, currentDate)
-                                    ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
-                                    : ""
-                            } ${
-                                isSameDay(date, clientDate!)
-                                    ? "border-icone-claro dark:border-icone-escuro border-3 text-icone-claro dark:text-icone-escuro font-semibold"
-                                    : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
-                            }`}
-                        >
-                            {isSameMonth(date, currentDate) ? (
-                                <span>{format(date, "d")}</span>
-                            ) : (
-                                <></>
-                            )}
-                            {/* Aqui você pode renderizar eventos */}
-                        </div>
-                    ))}
+                    {week.map((date, di) => {
+                        const key = format(date, "yyyy-MM-dd");
+                        const events = eventsByDate[key] || [];
+
+                        return (
+                            <div
+                                key={di}
+                                className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
+                                    isSameMonth(date, currentDate)
+                                        ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
+                                        : ""
+                                } ${
+                                    isSameDay(date, clientDate!)
+                                        ? "border-icone-claro dark:border-icone-escuro border-3 text-icone-claro dark:text-icone-escuro font-semibold"
+                                        : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
+                                }`}
+                            >
+                                <span>
+                                    {isSameMonth(date, currentDate)
+                                        ? format(date, "d")
+                                        : ""}
+                                </span>
+                                {events.map((ev) => (
+                                    <div
+                                        key={ev.id}
+                                        className="mt-1 w-full text-xs truncate"
+                                        title={ev.title}
+                                    >
+                                        • {ev.title}
+                                    </div>
+                                ))}
+                                {/* Aqui você pode renderizar eventos */}
+                            </div>
+                        );
+                    })}
                 </div>
             ))}
         </div>
