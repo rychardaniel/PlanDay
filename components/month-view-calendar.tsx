@@ -4,7 +4,8 @@ import { addMonths, subMonths, isSameMonth, startOfMonth } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { BodyMonthViewCalendar } from "./body-month-view-calendar";
 import { HeaderMounthViewCalendar } from "./header-month-view-calendar";
-import { Button } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 const MAX_MONTHS = 5;
 
@@ -91,9 +92,11 @@ export function MonthViewCalendar() {
         <>
             <HeaderMounthViewCalendar />
             <div className="absolute flex justify-end right-0 pr-4">
-                <Button onClick={centerCurrentMonth} size="small">
-                    Recentralizar
-                </Button>
+                <IconButton onClick={centerCurrentMonth}>
+                    <Tooltip title="Centralizar">
+                        <RestartAltIcon color="secondary" />
+                    </Tooltip>
+                </IconButton>
             </div>
 
             <div

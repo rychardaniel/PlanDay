@@ -44,12 +44,21 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
 
     return (
         <div>
-            <div className="flex items-center justify-between">
-                <h2 className="text-sm sm:text-xl font-bold mt-4">
-                    {format(currentDate, "MMMM yyyy", { locale: ptBR })
-                        .toLowerCase()
-                        .replace(/(^|\s)\S/g, (match) => match.toUpperCase())}
-                </h2>
+            <div className="flex flex-col items-center justify-center gap-2">
+                <hr className="w-full border-fundo-claro-dia dark:border-fundo-diferente border-[1.5px] mt-4" />
+                <div className="flex gap-1">
+                    <h2 className="text-sm sm:text-xl font-nornal">
+                        {format(currentDate, "MMMM", { locale: ptBR })
+                            .toLowerCase()
+                            .replace(/(^|\s)\S/g, (match) =>
+                                match.toUpperCase()
+                            )}
+                    </h2>
+                    <h2 className="text-sm sm:text-xl font-extralight">
+                        {format(currentDate, "yyyy")}
+                    </h2>
+                </div>
+                <hr className="w-full border-fundo-claro-dia dark:border-fundo-diferente border-[1.5px] mb-2" />
             </div>
 
             {weeks.map((week, wi) => (
@@ -59,18 +68,16 @@ export function BodyMonthViewCalendar({ currentDate }: Props) {
                             key={di}
                             className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
                                 isSameMonth(date, currentDate)
-                                    ? "bg-zinc-200 dark:bg-zinc-800 border"
+                                    ? "bg-fundo-claro-dia dark:bg-fundo-escuro-dia border"
                                     : ""
                             } ${
                                 isSameDay(date, clientDate!)
-                                    ? "border-blue-500 border-2 dark:border"
-                                    : "border-white dark:border-zinc-950"
+                                    ? "border-icone-claro dark:border-icone-escuro border-3 text-icone-claro dark:text-icone-escuro font-semibold"
+                                    : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
                             }`}
                         >
                             {isSameMonth(date, currentDate) ? (
-                                <span className="font-semibold">
-                                    {format(date, "d")}
-                                </span>
+                                <span>{format(date, "d")}</span>
                             ) : (
                                 <></>
                             )}

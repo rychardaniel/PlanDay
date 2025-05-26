@@ -11,11 +11,11 @@ export function HeaderMounthViewCalendar() {
 
     return (
         <div className="w-full px-0.5 mb-2">
-            <ul className="grid grid-cols-7 gap-1">
+            <ul className="grid grid-cols-7 gap-1 bg-fundo-claro-dia dark:bg-fundo-escuro-dia rounded-md">
                 {days.map((day) => (
                     <li
                         key={day.id}
-                        className="flex justify-center items-center bg-zinc-50 dark:bg-zinc-800 py-1 text-sm font-medium text-black dark:text-white border border-zinc-400"
+                        className="flex justify-center items-center py-1 text-sm font-medium text-black dark:text-white"
                     >
                         {day.acronym}
                     </li>

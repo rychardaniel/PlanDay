@@ -17,6 +17,18 @@ body {
     font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
 }
 
+@theme {
+    --color-fundo-claro-1: #fefdfa;
+    --color-fundo-claro-dia: #f4f3f2;
+    --color-icone-claro: #e09898;
+
+    --color-fundo-escuro-1: #1e1d1a;
+    --color-fundo-escuro-dia: #272624;
+    --color-icone-escuro: #7a3330;
+
+    --color-fundo-diferente: #353431;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
 }
