@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 
+// api/events?start=2025-05-01&end=2025-05-31
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const startDateString = searchParams.get("start"); // Formato "YYYY-MM-DD", ex: "2025-05-01"

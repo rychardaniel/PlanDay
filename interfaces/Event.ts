@@ -6,14 +6,19 @@ type EventItem = {
     created_at: string;
 };
 
+type EventsResponse = {
+    events: EventItem[];
+};
+
 type EventType = {
     id: String;
     name: String;
     color: String;
 };
 
-type EventsByDate = { [dateKey: string]: EventItem[] };
-
-type EventsResponse = {
-    events: EventItem[];
+type EventTypeResponse = {
+    types: EventType[];
 };
+
+type EventsByDate = { [dateKey: string]: EventItem[] };
+type EventTypes = { types: EventType[] };
