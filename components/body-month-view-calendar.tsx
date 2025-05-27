@@ -76,7 +76,7 @@ export function BodyMonthViewCalendar({
                         return (
                             <div
                                 key={di}
-                                className={`h-18 text-sm flex flex-col justify-end relative pb-6 ${
+                                className={`h-18 text-sm flex flex-col-reverse justify-between ${
                                     isSameMonth(date, currentDate)
                                         ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
                                         : ""
@@ -86,33 +86,35 @@ export function BodyMonthViewCalendar({
                                         : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
                                 }`}
                             >
-                                <span className="absolute pr-1 bottom-0 right-0">
+                                <span className="h-[18px] w-full flex justify-end pr-1">
                                     {isSameMonth(date, currentDate)
                                         ? format(date, "d")
                                         : ""}
                                 </span>
-                                {events.map((ev) => {
-                                    const type = eventTypes.types.find(
-                                        (type) => type.id === ev.typeId
-                                    );
+                                <div className="flex flex-col h-full">
+                                    {events.map((ev) => {
+                                        const type = eventTypes.types.find(
+                                            (type) => type.id === ev.typeId
+                                        );
 
-                                    const colorEvent = type?.color;
-                                    const nameEvent = type?.name;
+                                        const colorEvent = type?.color;
+                                        const nameEvent = type?.name;
 
-                                    return (
-                                        <div
-                                            key={ev.id}
-                                            className={`w-full h-full text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
-                                            title={ev.title}
-                                            style={{
-                                                backgroundColor:
-                                                    colorEvent?.toString(),
-                                            }}
-                                        >
-                                            {nameEvent}
-                                        </div>
-                                    );
-                                })}
+                                        return (
+                                            <div
+                                                key={ev.id}
+                                                className={`h-full text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                                title={ev.title}
+                                                style={{
+                                                    backgroundColor:
+                                                        colorEvent?.toString(),
+                                                }}
+                                            >
+                                                {nameEvent}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         );
                     })}
