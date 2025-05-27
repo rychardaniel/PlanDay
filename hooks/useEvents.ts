@@ -1,4 +1,5 @@
-import { endOfMonth, format, startOfMonth, parseISO } from "date-fns";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { useEffect, useState } from "react";
 
 export function useEvents(displayedMonths: Date[]) {
@@ -32,9 +33,9 @@ export function useEvents(displayedMonths: Date[]) {
                     setEventsByDate((prevEvents) => {
                         const updatedEvents = { ...prevEvents };
                         data.events.forEach((ev) => {
-                            const eventDateObject = parseISO(ev.date);
-                            const eventDateKey = format(
-                                eventDateObject,
+                            const eventDateKey = formatInTimeZone(
+                                ev.date,
+                                "Etc/UTC",
                                 "yyyy-MM-dd"
                             );
 
