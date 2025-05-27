@@ -1,11 +1,19 @@
-interface Event {
+type EventItem = {
     id: string;
     title: string;
-    date: string; // ex: "2025-05-15"
-}
+    date: string;
+    typeId: string;
+    created_at: string;
+};
 
-type EventsByDate = Record<string, Event[]>;
+type EventType = {
+    id: String;
+    name: String;
+    color: String;
+};
+
+type EventsByDate = { [dateKey: string]: EventItem[] };
 
 type EventsResponse = {
-    events: Event[];
+    events: EventItem[];
 };

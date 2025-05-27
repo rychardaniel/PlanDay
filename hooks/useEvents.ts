@@ -1,4 +1,4 @@
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { endOfMonth, format, startOfMonth, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 
 export function useEvents(displayedMonths: Date[]) {
@@ -10,7 +10,6 @@ export function useEvents(displayedMonths: Date[]) {
     useEffect(() => {
         const newMonthsToFetch: Date[] = [];
 
-        // Identifica os meses que ainda não foram buscados
         for (const monthDate of displayedMonths) {
             const monthKey = format(monthDate, "yyyy-MM");
             if (!fetchedMonthKeys.has(monthKey)) {
@@ -19,16 +18,13 @@ export function useEvents(displayedMonths: Date[]) {
         }
 
         if (newMonthsToFetch.length === 0) {
-            return; // Nenhum mês novo para buscar
+            return;
         }
 
-        // Para cada novo mês, busca os eventos
         newMonthsToFetch.forEach((monthToFetch) => {
             const monthKey = format(monthToFetch, "yyyy-MM");
             const startDate = format(startOfMonth(monthToFetch), "yyyy-MM-dd");
             const endDate = format(endOfMonth(monthToFetch), "yyyy-MM-dd");
-
-            // console.log(`Buscando eventos para: ${monthKey} (de ${startDate} a ${endDate})`);
 
             fetch(`/api/events?start=${startDate}&end=${endDate}`)
                 .then((r) => r.json())
@@ -36,11 +32,15 @@ export function useEvents(displayedMonths: Date[]) {
                     setEventsByDate((prevEvents) => {
                         const updatedEvents = { ...prevEvents };
                         data.events.forEach((ev) => {
-                            const eventDateKey = ev.date; // Assumindo que ev.date está no formato "yyyy-MM-dd"
+                            const eventDateObject = parseISO(ev.date);
+                            const eventDateKey = format(
+                                eventDateObject,
+                                "yyyy-MM-dd"
+                            );
+
                             if (!updatedEvents[eventDateKey]) {
                                 updatedEvents[eventDateKey] = [];
                             }
-                            // Adiciona o evento apenas se ele ainda não existir (verificando pelo ID)
                             if (
                                 !updatedEvents[eventDateKey].some(
                                     (existingEvent) =>
@@ -53,7 +53,6 @@ export function useEvents(displayedMonths: Date[]) {
                         return updatedEvents;
                     });
 
-                    // Adiciona o mês à lista de meses buscados APÓS o sucesso da busca
                     setFetchedMonthKeys((prevFetchedKeys) => {
                         const newKeys = new Set(prevFetchedKeys);
                         newKeys.add(monthKey);
@@ -65,11 +64,9 @@ export function useEvents(displayedMonths: Date[]) {
                         `Falha ao buscar eventos para o mês ${monthKey}:`,
                         error
                     );
-                    // Você pode querer adicionar uma lógica de retry ou remover o monthKey
-                    // de uma tentativa de adição otimista se implementado.
                 });
         });
-    }, [displayedMonths, fetchedMonthKeys]); // Adicionar fetchedMonthKeys às dependências
+    }, [displayedMonths, fetchedMonthKeys]);
 
     return eventsByDate;
 }
