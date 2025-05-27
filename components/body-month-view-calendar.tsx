@@ -19,7 +19,11 @@ type Props = {
     eventTypes: EventTypes;
 };
 
-export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
+export function BodyMonthViewCalendar({
+    currentDate,
+    eventsByDate,
+    eventTypes,
+}: Props) {
     const [clientDate, setClientDate] = useState<Date | null>(null);
 
     // Define a data atual apenas no cliente, evitando problemas com fuso horário
@@ -72,7 +76,7 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                         return (
                             <div
                                 key={di}
-                                className={`h-18 p-2 text-sm flex flex-col items-end justify-end ${
+                                className={`h-18 text-sm flex flex-col justify-end relative pb-6 ${
                                     isSameMonth(date, currentDate)
                                         ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
                                         : ""
@@ -82,21 +86,33 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                                         : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
                                 }`}
                             >
-                                <span>
+                                <span className="absolute pr-1 bottom-0 right-0">
                                     {isSameMonth(date, currentDate)
                                         ? format(date, "d")
                                         : ""}
                                 </span>
-                                {events.map((ev) => (
-                                    <div
-                                        key={ev.id}
-                                        className="mt-1 w-full text-xs truncate"
-                                        title={ev.title}
-                                    >
-                                        • {ev.title}
-                                    </div>
-                                ))}
-                                {/* Aqui você pode renderizar eventos */}
+                                {events.map((ev) => {
+                                    const type = eventTypes.types.find(
+                                        (type) => type.id === ev.typeId
+                                    );
+
+                                    const colorEvent = type?.color;
+                                    const nameEvent = type?.name;
+
+                                    return (
+                                        <div
+                                            key={ev.id}
+                                            className={`w-full h-full text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                            title={ev.title}
+                                            style={{
+                                                backgroundColor:
+                                                    colorEvent?.toString(),
+                                            }}
+                                        >
+                                            {nameEvent}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         );
                     })}

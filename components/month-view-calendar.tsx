@@ -96,7 +96,7 @@ export function MonthViewCalendar() {
     return (
         <>
             <HeaderMounthViewCalendar />
-            <div className="absolute flex justify-end right-0 pr-4">
+            <div className="absolute flex justify-end right-0 pr-4 z-1">
                 <IconButton onClick={centerCurrentMonth}>
                     <Tooltip title="Centralizar">
                         <RestartAltIcon color="secondary" />
