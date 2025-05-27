@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 type Props = {
     currentDate: Date;
     eventsByDate: EventsByDate;
+    eventTypes: EventTypes;
 };
 
 export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
