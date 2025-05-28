@@ -12,6 +12,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { ModalAddEvent } from "./modal-add-event";
 
 type Props = {
     currentDate: Date;
@@ -25,8 +26,20 @@ export function BodyMonthViewCalendar({
     eventTypes,
 }: Props) {
     const [clientDate, setClientDate] = useState<Date | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDateForModal, setSelectedDateForModal] =
+        useState<Date | null>(null);
 
-    // Define a data atual apenas no cliente, evitando problemas com fuso horário
+    const handleOpenModal = (date: Date) => {
+        setSelectedDateForModal(date);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedDateForModal(null);
+    };
+
     useEffect(() => {
         setClientDate(new Date());
     }, []);
@@ -76,6 +89,7 @@ export function BodyMonthViewCalendar({
                         return (
                             <div
                                 key={di}
+                                onClick={() => handleOpenModal(date)}
                                 className={`h-18 text-sm flex flex-col-reverse justify-between ${
                                     isSameMonth(date, currentDate)
                                         ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
@@ -108,9 +122,7 @@ export function BodyMonthViewCalendar({
                                                     backgroundColor:
                                                         colorEvent?.toString(),
                                                 }}
-                                            >
-                                                
-                                            </div>
+                                            ></div>
                                         );
                                     })}
                                 </div>
@@ -119,6 +131,13 @@ export function BodyMonthViewCalendar({
                     })}
                 </div>
             ))}
+            {selectedDateForModal && (
+                <ModalAddEvent
+                    open={isModalOpen}
+                    handleClose={handleCloseModal}
+                    selectedDate={selectedDateForModal}
+                />
+            )}
         </div>
     );
 }
