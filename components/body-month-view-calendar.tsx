@@ -98,7 +98,6 @@ export function BodyMonthViewCalendar({
                                         );
 
                                         const colorEvent = type?.color;
-                                        const nameEvent = type?.name;
 
                                         return (
                                             <div
@@ -110,7 +109,7 @@ export function BodyMonthViewCalendar({
                                                         colorEvent?.toString(),
                                                 }}
                                             >
-                                                {nameEvent}
+                                                
                                             </div>
                                         );
                                     })}
