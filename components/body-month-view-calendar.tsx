@@ -12,8 +12,8 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
-import { ModalAddEvent } from "./modal-add-event";
 import { Tooltip } from "@mui/material";
+import DrawerEventsDay from "./drawer-events-day";
 
 type Props = {
     currentDate: Date;
@@ -27,18 +27,20 @@ export function BodyMonthViewCalendar({
     eventTypes,
 }: Props) {
     const [clientDate, setClientDate] = useState<Date | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedDateForModal, setSelectedDateForModal] =
+    const [eventsForDrawer, setEventsForDrawer] = useState<EventItem[]>([]);
+    const [selectedDateForDrawer, setSelectedDateForDrawer] =
         useState<Date | null>(null);
 
-    const handleOpenModal = (date: Date) => {
-        setSelectedDateForModal(date);
-        setIsModalOpen(true);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const handleOpenDrawer = (date: Date, events: EventItem[]) => {
+        setSelectedDateForDrawer(date);
+        setEventsForDrawer(events);
+        setIsDrawerOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedDateForModal(null);
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
     };
 
     useEffect(() => {
@@ -63,9 +65,9 @@ export function BodyMonthViewCalendar({
     }
 
     const eventHeightClasses: Record<number, string> = {
-        0: "h-9/10",
-        1: "h-7/10",
-        2: "h-5/10",
+        0: "h-[90%]",
+        1: "h-[70%]",
+        2: "h-[50%]",
     };
 
     return (
@@ -73,12 +75,8 @@ export function BodyMonthViewCalendar({
             <div className="flex flex-col items-center justify-center gap-2">
                 <hr className="w-full border-fundo-claro-2 dark:border-fundo-especial border-[1.5px] mt-4" />
                 <div className="flex gap-1">
-                    <h2 className="text-sm sm:text-xl font-nornal">
-                        {format(currentDate, "MMMM", { locale: ptBR })
-                            .toLowerCase()
-                            .replace(/(^|\s)\S/g, (match) =>
-                                match.toUpperCase()
-                            )}
+                    <h2 className="text-sm sm:text-xl font-nornal capitalize">
+                        {format(currentDate, "MMMM", { locale: ptBR })}
                     </h2>
                     <h2 className="text-sm sm:text-xl font-extralight">
                         {format(currentDate, "yyyy")}
@@ -99,9 +97,9 @@ export function BodyMonthViewCalendar({
                         return (
                             <div
                                 key={di}
-                                onDoubleClick={
+                                onClick={
                                     isMonth
-                                        ? () => handleOpenModal(date)
+                                        ? () => handleOpenDrawer(date, events)
                                         : () => {}
                                 }
                                 className={`h-18 text-sm flex flex-col justify-between relative ${
@@ -149,11 +147,12 @@ export function BodyMonthViewCalendar({
                     })}
                 </div>
             ))}
-            {selectedDateForModal && (
-                <ModalAddEvent
-                    open={isModalOpen}
-                    handleClose={handleCloseModal}
-                    selectedDate={selectedDateForModal}
+            {selectedDateForDrawer && (
+                <DrawerEventsDay
+                    open={isDrawerOpen}
+                    handleClose={handleCloseDrawer}
+                    selectedDate={selectedDateForDrawer}
+                    events={eventsForDrawer}
                 />
             )}
         </div>
