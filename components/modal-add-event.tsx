@@ -38,8 +38,7 @@ export function ModalAddEvent({ open, handleClose, selectedDate }: Props) {
                         Criar evento para {format(selectedDate, "dd/MM/yyyy")}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor
-                        ligula.
+                        Em desenvolvimento
                     </Typography>
                 </Box>
             </Modal>

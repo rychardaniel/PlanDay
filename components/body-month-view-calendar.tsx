@@ -98,7 +98,7 @@ export function BodyMonthViewCalendar({
                         return (
                             <div
                                 key={di}
-                                onClick={
+                                onDoubleClick={
                                     isMonth
                                         ? () => handleOpenModal(date)
                                         : () => {}
