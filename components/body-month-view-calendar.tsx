@@ -61,6 +61,12 @@ export function BodyMonthViewCalendar({
         weeks.push(week);
     }
 
+    const eventHeightClasses: Record<number, string> = {
+        0: "h-9/10",
+        1: "h-7/10",
+        2: "h-5/10",
+    };
+
     return (
         <div>
             <div className="flex flex-col items-center justify-center gap-2">
@@ -86,37 +92,44 @@ export function BodyMonthViewCalendar({
                         const key = format(date, "yyyy-MM-dd");
                         const events = eventsByDate[key] || [];
 
+                        const isToday = isSameDay(date, clientDate!);
+                        const isMonth = isSameMonth(date, currentDate);
+
                         return (
                             <div
                                 key={di}
-                                onClick={() => handleOpenModal(date)}
-                                className={`h-18 text-sm flex flex-col-reverse justify-between ${
-                                    isSameMonth(date, currentDate)
+                                onClick={
+                                    isMonth
+                                        ? () => handleOpenModal(date)
+                                        : () => {}
+                                }
+                                className={`h-18 text-sm flex flex-col justify-between relative ${
+                                    isMonth
                                         ? "bg-fundo-claro-2 dark:bg-fundo-escuro-2 border"
                                         : ""
                                 } ${
-                                    isSameDay(date, clientDate!)
+                                    isToday
                                         ? "border-icone-claro dark:border-icone-escuro border-3 text-icone-claro dark:text-icone-escuro font-semibold"
                                         : "border-fundo-claro-1 dark:border-fundo-escuro-1 border-2 font-normal"
                                 }`}
                             >
-                                <span className="h-[18px] w-full flex justify-end pr-1">
-                                    {isSameMonth(date, currentDate)
-                                        ? format(date, "d")
-                                        : ""}
+                                <span className="h-auto w-auto absolute bottom-0 right-1 z-1 text-sm sm:text-lg sm:mr-1">
+                                    {isMonth ? format(date, "d") : ""}
                                 </span>
-                                <div className="flex flex-col h-full">
-                                    {events.map((ev) => {
+                                <div className="flex flex-col h-full relative">
+                                    {events.slice(0, 3).map((ev, index) => {
                                         const type = eventTypes.types.find(
                                             (type) => type.id === ev.typeId
                                         );
 
                                         const colorEvent = type?.color;
+                                        const height =
+                                            eventHeightClasses[index];
 
                                         return (
                                             <div
                                                 key={ev.id}
-                                                className={`h-full text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                                className={`${height} bottom-0 rounded-t-[30px] w-full absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
                                                 title={ev.title}
                                                 style={{
                                                     backgroundColor:
