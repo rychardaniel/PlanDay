@@ -13,6 +13,7 @@ import {
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { ModalAddEvent } from "./modal-add-event";
+import { Tooltip } from "@mui/material";
 
 type Props = {
     currentDate: Date;
@@ -127,15 +128,19 @@ export function BodyMonthViewCalendar({
                                             eventHeightClasses[index];
 
                                         return (
-                                            <div
-                                                key={ev.id}
-                                                className={`${height} bottom-0 rounded-t-[30px] w-full absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                            <Tooltip
                                                 title={ev.title}
-                                                style={{
-                                                    backgroundColor:
-                                                        colorEvent?.toString(),
-                                                }}
-                                            ></div>
+                                                arrow
+                                                key={ev.id}
+                                            >
+                                                <div
+                                                    className={`${height} bottom-0 rounded-t-[30px] w-full absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                                    style={{
+                                                        backgroundColor:
+                                                            colorEvent?.toString(),
+                                                    }}
+                                                ></div>
+                                            </Tooltip>
                                         );
                                     })}
                                 </div>
