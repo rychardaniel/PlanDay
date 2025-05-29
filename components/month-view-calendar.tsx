@@ -3,7 +3,7 @@
 import { addMonths, subMonths, isSameMonth, startOfMonth } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { BodyMonthViewCalendar } from "./body-month-view-calendar";
-import { HeaderMounthViewCalendar } from "./header-month-view-calendar";
+import { HeaderMonthViewCalendar } from "./header-month-view-calendar";
 import { IconButton, Tooltip } from "@mui/material";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEvents } from "@/hooks/useEvents";
@@ -95,7 +95,7 @@ export function MonthViewCalendar() {
 
     return (
         <>
-            <HeaderMounthViewCalendar />
+            <HeaderMonthViewCalendar />
             <div className="absolute flex justify-end right-0 pr-4 z-1">
                 <IconButton onClick={centerCurrentMonth}>
                     <Tooltip title="Centralizar">

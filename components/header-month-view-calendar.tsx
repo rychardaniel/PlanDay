@@ -1,4 +1,4 @@
-export function HeaderMounthViewCalendar() {
+export function HeaderMonthViewCalendar() {
     const days = [
         { acronym: "D", id: 1 },
         { acronym: "S", id: 2 },
