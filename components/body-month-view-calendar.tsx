@@ -13,7 +13,7 @@ import {
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
-import DrawerEventsDay from "./drawer-events-day";
+import { DrawerEventsDay } from "./drawer-events-day";
 
 type Props = {
     currentDate: Date;
@@ -29,7 +29,7 @@ export function BodyMonthViewCalendar({
     const [clientDate, setClientDate] = useState<Date | null>(null);
     const [eventsForDrawer, setEventsForDrawer] = useState<EventItem[]>([]);
     const [selectedDateForDrawer, setSelectedDateForDrawer] =
-        useState<Date | null>(null);
+        useState<Date | null>(currentDate);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

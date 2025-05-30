@@ -13,13 +13,17 @@ const style = {
     p: 4,
 };
 
-interface Props {
+interface ModalAddEventsProps {
     open: boolean;
     handleClose: () => void;
     selectedDate: Date;
 }
 
-export function ModalAddEvent({ open, handleClose, selectedDate }: Props) {
+export function ModalAddEvent({
+    open,
+    handleClose,
+    selectedDate,
+}: ModalAddEventsProps) {
     return (
         <div>
             <Modal
