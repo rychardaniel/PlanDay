@@ -22,10 +22,10 @@ export function Header() {
                 </div>
 
                 <div className="flex flex-row gap-2 items-center">
-                    <Button size="small" color="info" onClick={handleOpen}>
+                    <Button size="small" color="primary" onClick={handleOpen}>
                         <Add />
                     </Button>
-                    <Button color="info" size="small">
+                    <Button color="primary" size="small">
                         <SettingsIcon />
                     </Button>
                     <ThemeToggleButton />

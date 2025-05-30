@@ -10,13 +10,14 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import Alert from "@mui/material/Alert";
 
 interface DrawerEventsDayProps {
     open: boolean;
     handleClose: () => void;
     selectedDate: Date;
     events?: EventItem[];
+    eventTypes: EventTypes;
 }
 
 export function DrawerEventsDay({
@@ -24,6 +25,7 @@ export function DrawerEventsDay({
     handleClose,
     selectedDate,
     events,
+    eventTypes,
 }: DrawerEventsDayProps) {
     const drawerContent = (
         <Box
@@ -69,39 +71,55 @@ export function DrawerEventsDay({
                     }}
                 >
                     {events && events.length > 0 ? (
-                        events.map((event) => (
-                            <ListItem
-                                key={event.id}
-                                disablePadding
-                                sx={{
-                                    paddingX: { xs: 1, sm: 2 },
-                                }}
-                            >
-                                <Accordion sx={{ width: "100%" }}>
-                                    <AccordionSummary
-                                        expandIcon={<KeyboardArrowDownIcon />}
-                                        aria-controls={`panel-${event.id}-content`}
-                                        id={`panel-${event.id}-header`}
-                                    >
-                                        <Typography component="span">
-                                            {event.title}
-                                        </Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography>
-                                            Detalhes do evento: {event.id}
-                                            {/* {event.description || "Sem descrição."} */}
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </ListItem>
-                        ))
+                        events.map((event) => {
+                            const type = eventTypes.types.find(
+                                (type) => type.id === event.typeId
+                            );
+
+                            const colorEvent = type?.color;
+
+                            return (
+                                <ListItem
+                                    key={event.id}
+                                    disablePadding
+                                    sx={{
+                                        paddingX: { xs: 1, sm: 2 },
+                                    }}
+                                >
+                                    <Accordion sx={{ width: "100%" }}>
+                                        <AccordionSummary
+                                            expandIcon={
+                                                <KeyboardArrowDownIcon />
+                                            }
+                                            aria-controls={`panel-${event.id}-content`}
+                                            id={`panel-${event.id}-header`}
+                                        >
+                                            <Typography
+                                                component="span"
+                                                sx={{
+                                                    color: colorEvent?.toString(),
+                                                }}
+                                            >
+                                                {event.title}
+                                            </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography>
+                                                Detalhes do evento: {event.id}
+                                                {/* {event.description || "Sem descrição."} */}
+                                            </Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </ListItem>
+                            );
+                        })
                     ) : (
-                        <ListItem>
-                            <ListItemText
-                                primary="Nenhum evento para este dia."
-                                sx={{ textAlign: "center", paddingY: 2 }}
-                            />
+                        <ListItem
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Alert severity="info">
+                                Nenhum evento para este dia
+                            </Alert>
                         </ListItem>
                     )}
                 </List>

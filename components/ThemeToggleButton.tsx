@@ -8,7 +8,7 @@ export default function ThemeToggleButton() {
     const { mode, toggleTheme } = useThemeMode();
 
     return (
-        <Button onClick={toggleTheme} color="info" size="small">
+        <Button onClick={toggleTheme} color="primary" size="small">
             {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
         </Button>
     );

@@ -153,6 +153,7 @@ export function BodyMonthViewCalendar({
                     handleClose={handleCloseDrawer}
                     selectedDate={selectedDateForDrawer}
                     events={eventsForDrawer}
+                    eventTypes={eventTypes}
                 />
             )}
         </div>
