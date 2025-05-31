@@ -4,6 +4,8 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Button,
+    IconButton,
     Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -11,6 +13,10 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Alert from "@mui/material/Alert";
+import { useThemeMode } from "@/theme/ThemeContext";
+import { ModalAddEvent } from "./modal-add-event";
+import { useState } from "react";
+import { Add } from "@mui/icons-material";
 
 interface DrawerEventsDayProps {
     open: boolean;
@@ -27,6 +33,18 @@ export function DrawerEventsDay({
     events,
     eventTypes,
 }: DrawerEventsDayProps) {
+    const [isModalrOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const { mode } = useThemeMode();
+
     const drawerContent = (
         <Box
             sx={{
@@ -47,11 +65,26 @@ export function DrawerEventsDay({
                     borderColor: "divider",
                     textAlign: "center",
                     flexShrink: 0,
+                    position: "relative",
                 }}
             >
                 <Typography variant="h6" component="h2" fontWeight="bold">
                     {formatDateWithCapitalizedDay(selectedDate)}
                 </Typography>
+                <IconButton
+                    size="medium"
+                    color="primary"
+                    onClick={handleOpenModal}
+                    sx={{
+                        position: "absolute",
+                        right: 1,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                    }}
+                    aria-label="Adicionar evento"
+                >
+                    <Add fontSize="medium" />
+                </IconButton>
             </Box>
 
             <Box
@@ -76,7 +109,7 @@ export function DrawerEventsDay({
                                 (type) => type.id === event.typeId
                             );
 
-                            const colorEvent = type?.color;
+                            const colorEvent = type?.color.toString();
 
                             return (
                                 <ListItem
@@ -86,7 +119,15 @@ export function DrawerEventsDay({
                                         paddingX: { xs: 1, sm: 2 },
                                     }}
                                 >
-                                    <Accordion sx={{ width: "100%" }}>
+                                    <Accordion
+                                        sx={{
+                                            width: "100%",
+                                            border: 1,
+                                            borderColor: colorEvent,
+                                            borderRadius: 2,
+                                            boxShadow: 4,
+                                        }}
+                                    >
                                         <AccordionSummary
                                             expandIcon={
                                                 <KeyboardArrowDownIcon />
@@ -105,8 +146,8 @@ export function DrawerEventsDay({
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>
-                                                Detalhes do evento: {event.id}
-                                                {/* {event.description || "Sem descrição."} */}
+                                                {event.description ||
+                                                    "Sem descrição"}
                                             </Typography>
                                         </AccordionDetails>
                                     </Accordion>
@@ -128,21 +169,29 @@ export function DrawerEventsDay({
     );
 
     return (
-        <Drawer
-            anchor="bottom"
-            open={open}
-            onClose={handleClose}
-            slotProps={{
-                paper: {
-                    sx: {
-                        borderTopLeftRadius: { xs: 20, sm: 30 },
-                        borderTopRightRadius: { xs: 20, sm: 30 },
-                        alignItems: "center",
+        <div>
+            <Drawer
+                anchor="bottom"
+                open={open}
+                onClose={handleClose}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderTopLeftRadius: { xs: 20, sm: 30 },
+                            borderTopRightRadius: { xs: 20, sm: 30 },
+                            alignItems: "center",
+                            background: mode == "dark" ? "#1e1d1a" : "#fefdfa",
+                        },
                     },
-                },
-            }}
-        >
-            {drawerContent}
-        </Drawer>
+                }}
+            >
+                {drawerContent}
+            </Drawer>
+            <ModalAddEvent
+                open={isModalrOpen}
+                handleClose={handleCloseModal}
+                selectedDate={selectedDate}
+            />
+        </div>
     );
 }
