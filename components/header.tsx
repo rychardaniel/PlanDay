@@ -2,16 +2,28 @@
 
 import { useState } from "react";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Button } from "@mui/material";
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { ModalAddEvent } from "./modal-add-event";
+import MenuIcon from "@mui/icons-material/Menu";
 
 export function Header() {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const handleOpenModal = () => setIsOpenModal(true);
+    const handleCloseModal = () => setIsOpenModal(false);
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <header className="dark:bg-fundo-escuro-1 bg-fundo-claro-1 w-full py-2 px-6 flex justify-center">
@@ -21,19 +33,34 @@ export function Header() {
                     <h2 className="cursor-default">Calendário</h2>
                 </div>
 
-                <div className="flex flex-row gap-2 items-center">
-                    <Button size="small" color="primary" onClick={handleOpen}>
-                        <Add />
-                    </Button>
-                    <Button color="primary" size="small">
-                        <SettingsIcon />
-                    </Button>
-                    <ThemeToggleButton />
+                <div>
+                    <IconButton onClick={handleClick}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                        <MenuItem onClick={handleClose}>
+                            <ThemeToggleButton />
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                            <Button color="primary" size="small">
+                                <SettingsIcon />
+                            </Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                            <Button
+                                size="small"
+                                color="primary"
+                                onClick={handleOpenModal}
+                            >
+                                <Add />
+                            </Button>
+                        </MenuItem>
+                    </Menu>
                 </div>
             </div>
             <ModalAddEvent
-                handleClose={handleClose}
-                open={open}
+                handleClose={handleCloseModal}
+                open={isOpenModal}
                 selectedDate={new Date()}
             />
         </header>
