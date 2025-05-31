@@ -1,68 +1,81 @@
 "use client";
 
 import { useState } from "react";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
+import MenuIcon from "@mui/icons-material/Menu";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { ModalAddEvent } from "./modal-add-event";
-import MenuIcon from "@mui/icons-material/Menu";
 
-export function Header() {
-    const [isOpenModal, setIsOpenModal] = useState(false);
-    const handleOpenModal = () => setIsOpenModal(true);
-    const handleCloseModal = () => setIsOpenModal(false);
+export const Header: React.FC = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const isMenuOpen = Boolean(menuAnchorEl);
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setMenuAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
     };
 
     return (
-        <header className="dark:bg-fundo-escuro-1 bg-fundo-claro-1 w-full py-2 px-6 flex justify-center">
-            <div className="flex flex-row justify-between w-full max-w-[1400px]">
-                <div className="flex flex-row gap-2 items-center text-black dark:text-white text-xl">
+        <header className="w-full bg-fundo-claro-1 dark:bg-fundo-escuro-1 px-6 py-2 flex justify-center">
+            <div className="w-full max-w-[1400px] flex justify-between items-center">
+                <div className="flex items-center gap-2 text-xl text-black dark:text-white">
                     <CalendarMonthIcon />
                     <h2 className="cursor-default">Calendário</h2>
                 </div>
 
                 <div>
-                    <IconButton onClick={handleClick}>
+                    <IconButton
+                        onClick={handleMenuOpen}
+                        aria-controls={isMenuOpen ? "header-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={isMenuOpen ? "true" : undefined}
+                    >
                         <MenuIcon />
                     </IconButton>
-                    <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                        <MenuItem onClick={handleClose}>
+                    <Menu
+                        id="header-menu"
+                        anchorEl={menuAnchorEl}
+                        open={isMenuOpen}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleMenuClose}>
                             <ThemeToggleButton />
                         </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                            <Button color="primary" size="small">
+                        <MenuItem onClick={handleMenuClose}>
+                            <IconButton size="small" color="primary">
                                 <SettingsIcon />
-                            </Button>
+                            </IconButton>
                         </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                            <Button
-                                size="small"
-                                color="primary"
-                                onClick={handleOpenModal}
-                            >
-                                <Add />
-                            </Button>
+                        <MenuItem
+                            onClick={() => {
+                                handleMenuClose();
+                                handleOpenModal();
+                            }}
+                        >
+                            <IconButton size="small" color="primary">
+                                <AddIcon />
+                            </IconButton>
                         </MenuItem>
                     </Menu>
                 </div>
             </div>
+
             <ModalAddEvent
+                open={isModalOpen}
                 handleClose={handleCloseModal}
-                open={isOpenModal}
                 selectedDate={new Date()}
             />
         </header>
     );
-}
+};
