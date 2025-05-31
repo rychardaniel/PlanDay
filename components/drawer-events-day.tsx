@@ -6,6 +6,7 @@ import {
     AccordionSummary,
     Button,
     IconButton,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -71,20 +72,21 @@ export function DrawerEventsDay({
                 <Typography variant="h6" component="h2" fontWeight="bold">
                     {formatDateWithCapitalizedDay(selectedDate)}
                 </Typography>
-                <IconButton
-                    size="medium"
-                    color="primary"
-                    onClick={handleOpenModal}
-                    sx={{
-                        position: "absolute",
-                        right: 1,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                    }}
-                    aria-label="Adicionar evento"
-                >
-                    <Add fontSize="medium" />
-                </IconButton>
+                <Tooltip title={"Adicionar evento"}>
+                    <IconButton
+                        size="medium"
+                        color="primary"
+                        onClick={handleOpenModal}
+                        sx={{
+                            position: "absolute",
+                            right: 1,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                        }}
+                    >
+                        <Add fontSize="medium" />
+                    </IconButton>
+                </Tooltip>
             </Box>
 
             <Box
