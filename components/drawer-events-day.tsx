@@ -79,7 +79,7 @@ export function DrawerEventsDay({
                         onClick={handleOpenModal}
                         sx={{
                             position: "absolute",
-                            right: 1,
+                            right: "8px",
                             top: "50%",
                             transform: "translateY(-50%)",
                         }}
