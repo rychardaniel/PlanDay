@@ -52,9 +52,7 @@ export function DrawerEventsDay({
                 width: { xs: "100vw", sm: 400, md: 500 },
                 display: "flex",
                 flexDirection: "column",
-                height: "auto",
-                minHeight: "40vh",
-                maxHeight: "60vh",
+                height: "60vh",
             }}
             role="presentation"
         >
@@ -124,10 +122,12 @@ export function DrawerEventsDay({
                                     <Accordion
                                         sx={{
                                             width: "100%",
-                                            border: 1,
-                                            borderColor: colorEvent,
                                             borderRadius: 2,
                                             boxShadow: 4,
+                                            backgroundColor:
+                                                mode == "dark"
+                                                    ? "#272624  "
+                                                    : "#f4f3f2",
                                         }}
                                     >
                                         <AccordionSummary
@@ -137,14 +137,36 @@ export function DrawerEventsDay({
                                             aria-controls={`panel-${event.id}-content`}
                                             id={`panel-${event.id}-header`}
                                         >
-                                            <Typography
-                                                component="span"
+                                            <Box
                                                 sx={{
-                                                    color: colorEvent?.toString(),
+                                                    display: "flex",
+                                                    width: "100%",
+                                                    justifyContent:
+                                                        "space-between",
+                                                    alignItems: "center",
+                                                    paddingRight: 3,
                                                 }}
                                             >
-                                                {event.title}
-                                            </Typography>
+                                                <Box
+                                                    sx={{
+                                                        width: "80%",
+                                                    }}
+                                                >
+                                                    <Typography component="span">
+                                                        {event.title}
+                                                    </Typography>
+                                                </Box>
+
+                                                <Box
+                                                    sx={{
+                                                        width: "60px",
+                                                        height: "25px",
+                                                        borderRadius: 3,
+                                                        backgroundColor:
+                                                            colorEvent,
+                                                    }}
+                                                ></Box>
+                                            </Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>
