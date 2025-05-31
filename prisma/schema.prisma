@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Event {
-    id         String    @id @default(uuid())
-    title      String
-    date       DateTime
-    typeId     String
-    type       EventType @relation(fields: [typeId], references: [id])
-    created_at DateTime  @default(now())
+    id          String    @id @default(uuid())
+    title       String
+    date        DateTime
+    description String?
+    typeId      String
+    type        EventType @relation(fields: [typeId], references: [id])
+    created_at  DateTime  @default(now())
 
     @@map("events")
 }
