@@ -1,19 +1,16 @@
-import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    IconButton,
-    Tooltip,
-    Typography,
-} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Alert from "@mui/material/Alert";
+import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
 import { useThemeMode } from "@/theme/ThemeContext";
 import { ModalAddEvent } from "./modal-add-event";
 import { useState } from "react";

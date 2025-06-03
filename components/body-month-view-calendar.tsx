@@ -12,7 +12,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
-import { Tooltip } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import { DrawerEventsDay } from "./drawer-events-day";
 
 type Props = {

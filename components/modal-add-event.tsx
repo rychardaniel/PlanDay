@@ -1,4 +1,6 @@
-import { Box, Typography, Modal } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 import { format } from "date-fns";
 
 const style = {
