@@ -15,13 +15,13 @@ import { useThemeMode } from "@/theme/ThemeContext";
 import { ModalAddEvent } from "./modal-add-event";
 import { useState } from "react";
 import { Add } from "@mui/icons-material";
+import { useEventTypes } from "@/context/EventTypesContext";
 
 interface DrawerEventsDayProps {
     open: boolean;
     handleClose: () => void;
     selectedDate: Date;
     events?: EventItem[];
-    eventTypes: EventTypes;
 }
 
 export function DrawerEventsDay({
@@ -29,9 +29,14 @@ export function DrawerEventsDay({
     handleClose,
     selectedDate,
     events,
-    eventTypes,
 }: DrawerEventsDayProps) {
-    const [isModalrOpen, setIsModalOpen] = useState(false);
+    const {
+        eventTypes: eventTypesData,
+        isLoading: isLoadingTypes,
+        error: typesError,
+    } = useEventTypes();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -102,7 +107,7 @@ export function DrawerEventsDay({
                 >
                     {events && events.length > 0 ? (
                         events.map((event) => {
-                            const type = eventTypes.types.find(
+                            const type = eventTypesData.types.find(
                                 (type) => type.id === event.typeId
                             );
 
@@ -209,7 +214,7 @@ export function DrawerEventsDay({
                 {drawerContent}
             </Drawer>
             <ModalAddEvent
-                open={isModalrOpen}
+                open={isModalOpen}
                 handleClose={handleCloseModal}
                 selectedDate={selectedDate}
             />

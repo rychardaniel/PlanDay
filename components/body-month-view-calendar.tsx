@@ -14,18 +14,20 @@ import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import { DrawerEventsDay } from "./drawer-events-day";
+import { useEventTypes } from "@/context/EventTypesContext";
 
 type Props = {
     currentDate: Date;
     eventsByDate: EventsByDate;
-    eventTypes: EventTypes;
 };
 
-export function BodyMonthViewCalendar({
-    currentDate,
-    eventsByDate,
-    eventTypes,
-}: Props) {
+export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
+    const {
+        eventTypes: eventTypesData,
+        isLoading: isLoadingTypes,
+        error: typesError,
+    } = useEventTypes();
+
     const [clientDate, setClientDate] = useState<Date | null>(null);
     const [eventsForDrawer, setEventsForDrawer] = useState<EventItem[]>([]);
     const [selectedDateForDrawer, setSelectedDateForDrawer] =
@@ -117,7 +119,7 @@ export function BodyMonthViewCalendar({
                                 </span>
                                 <div className="flex flex-col h-full relative">
                                     {events.slice(0, 3).map((ev, index) => {
-                                        const type = eventTypes.types.find(
+                                        const type = eventTypesData.types.find(
                                             (type) => type.id === ev.typeId
                                         );
 
@@ -153,7 +155,6 @@ export function BodyMonthViewCalendar({
                     handleClose={handleCloseDrawer}
                     selectedDate={selectedDateForDrawer}
                     events={eventsForDrawer}
-                    eventTypes={eventTypes}
                 />
             )}
         </div>

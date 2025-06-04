@@ -11,8 +11,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { ptBR } from "date-fns/locale";
 import MenuItem from "@mui/material/MenuItem";
-import { useEventsTypes } from "@/hooks/useEventsTypes";
 import Button from "@mui/material/Button";
+import { useEventTypes } from "@/context/EventTypesContext";
 
 interface ModalAddEventsProps {
     open: boolean;
@@ -25,6 +25,12 @@ export function ModalAddEvent({
     handleClose,
     selectedDate,
 }: ModalAddEventsProps) {
+    const {
+        eventTypes: eventTypesData,
+        isLoading: isLoadingTypes,
+        error: typesError,
+    } = useEventTypes();
+
     const [nameEvent, setNameEvent] = useState<string>("");
     const [dateEvent, setDateEvent] = useState<Date | null>(selectedDate);
     const [typeEvent, setTypeEvent] = useState<string>("");
@@ -34,9 +40,19 @@ export function ModalAddEvent({
         setDateEvent(selectedDate);
         setNameEvent("");
         setTypeEvent("");
+        setDescriptionEvent("");
     }, [selectedDate, open]);
 
-    const eventTypesData = useEventsTypes();
+    // const eventTypesData = useEventsTypes();
+
+    // Lógica para lidar com isLoadingTypes e typesError se necessário
+    if (isLoadingTypes) {
+        // Pode mostrar um spinner ou desabilitar o select
+    }
+
+    if (typesError) {
+        // Pode mostrar uma mensagem de erro
+    }
 
     const handleTypeEventChange = (
         event: React.ChangeEvent<HTMLInputElement>

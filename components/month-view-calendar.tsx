@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEvents } from "@/hooks/useEvents";
-import { useEventsTypes } from "@/hooks/useEventsTypes";
 
 const MAX_MONTHS = 5;
 
@@ -22,7 +21,6 @@ export function MonthViewCalendar() {
     });
 
     const eventsByDate = useEvents(months);
-    const eventTypes = useEventsTypes();
 
     useEffect(() => {
         if (scrollContainerRef.current && currentMonthRef.current) {
@@ -120,7 +118,6 @@ export function MonthViewCalendar() {
                             <BodyMonthViewCalendar
                                 currentDate={month}
                                 eventsByDate={eventsByDate}
-                                eventTypes={eventTypes}
                             />
                         </div>
                     );
