@@ -1,3 +1,5 @@
+"use client";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -11,7 +13,6 @@ import { ptBR } from "date-fns/locale";
 import MenuItem from "@mui/material/MenuItem";
 import { useEventsTypes } from "@/hooks/useEventsTypes";
 import Button from "@mui/material/Button";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 interface ModalAddEventsProps {
     open: boolean;
@@ -25,12 +26,12 @@ export function ModalAddEvent({
     selectedDate,
 }: ModalAddEventsProps) {
     const [nameEvent, setNameEvent] = useState<string>("");
-    const [date, setDate] = useState<Date | null>(selectedDate);
+    const [dateEvent, setDateEvent] = useState<Date | null>(selectedDate);
     const [typeEvent, setTypeEvent] = useState<string>("");
     const [descriptionEvent, setDescriptionEvent] = useState<string>("");
 
     useEffect(() => {
-        setDate(selectedDate);
+        setDateEvent(selectedDate);
         setNameEvent("");
         setTypeEvent("");
     }, [selectedDate, open]);
@@ -44,15 +45,14 @@ export function ModalAddEvent({
     };
 
     const handleSubmit = async () => {
-        // Lógica para salvar o evento
-        if (!nameEvent || !date || !typeEvent) {
+        if (!nameEvent || !dateEvent || !typeEvent) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
 
         const eventPayload = {
             title: nameEvent,
-            date: format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"), // Formato ISO 8601
+            date: format(dateEvent, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"), // Formato ISO 8601
             description: descriptionEvent,
             typeId: typeEvent,
         };
@@ -134,9 +134,9 @@ export function ModalAddEvent({
                             component="h2"
                             sx={{ textAlign: "center" }}
                         >
-                            {date && isValid(date)
+                            {dateEvent && isValid(dateEvent)
                                 ? `Criar evento para ${format(
-                                      date,
+                                      dateEvent,
                                       "dd/MM/yyyy"
                                   )}`
                                 : "Selecione uma data válida"}
@@ -157,9 +157,9 @@ export function ModalAddEvent({
                             >
                                 <DatePicker
                                     sx={{ width: "50%" }}
-                                    value={date}
+                                    value={dateEvent}
                                     onChange={(newDate: Date | null) =>
-                                        setDate(newDate)
+                                        setDateEvent(newDate)
                                     }
                                 />
                             </LocalizationProvider>
@@ -224,7 +224,9 @@ export function ModalAddEvent({
                             <Button
                                 type="submit"
                                 variant="contained"
-                                disabled={!nameEvent || !date || !typeEvent}
+                                disabled={
+                                    !nameEvent || !dateEvent || !typeEvent
+                                }
                             >
                                 Salvar Evento
                             </Button>
