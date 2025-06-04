@@ -7,7 +7,7 @@ import { HeaderMonthViewCalendar } from "./header-month-view-calendar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import { useEvents } from "@/hooks/useEvents";
+import { useEventsContext } from "@/context/EventsContext";
 
 const MAX_MONTHS = 5;
 
@@ -20,7 +20,14 @@ export function MonthViewCalendar() {
         return [subMonths(current, 1), current, addMonths(current, 1)];
     });
 
-    const eventsByDate = useEvents(months);
+    const { eventsByDate, fetchEventsForMonths, isLoadingEvents } =
+        useEventsContext(); // <-- Use o contexto
+
+    useEffect(() => {
+        if (months.length > 0) {
+            fetchEventsForMonths(months);
+        }
+    }, [months, fetchEventsForMonths]);
 
     useEffect(() => {
         if (scrollContainerRef.current && currentMonthRef.current) {
@@ -108,7 +115,7 @@ export function MonthViewCalendar() {
                 className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden pb-9"
                 onScroll={handleScroll}
             >
-                {months.map((month, index) => {
+                {months.map((month) => {
                     const isCurrentMonth = isSameMonth(month, new Date());
                     return (
                         <div

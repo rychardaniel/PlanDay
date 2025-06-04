@@ -13,6 +13,7 @@ import { ptBR } from "date-fns/locale";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useEventTypes } from "@/context/EventTypesContext";
+import { useEventsContext } from "@/context/EventsContext";
 
 interface ModalAddEventsProps {
     open: boolean;
@@ -30,6 +31,8 @@ export function ModalAddEvent({
         isLoading: isLoadingTypes,
         error: typesError,
     } = useEventTypes();
+
+    const { addEventToDisplay } = useEventsContext();
 
     const [nameEvent, setNameEvent] = useState<string>("");
     const [dateEvent, setDateEvent] = useState<Date | null>(selectedDate);
@@ -99,7 +102,7 @@ export function ModalAddEvent({
 
             const newEventFromApi: EventItem = await response.json();
 
-            // onEventAdded(newEventFromApi);
+            addEventToDisplay(newEventFromApi);
 
             handleClose();
         } catch (error) {
@@ -172,6 +175,7 @@ export function ModalAddEvent({
                                 adapterLocale={ptBR}
                             >
                                 <DatePicker
+                                    label="Data do Evento"
                                     sx={{ width: "50%" }}
                                     value={dateEvent}
                                     onChange={(newDate: Date | null) =>
