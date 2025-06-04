@@ -29,7 +29,6 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
     } = useEventTypes();
 
     const [clientDate, setClientDate] = useState<Date | null>(null);
-    const [eventsForDrawer, setEventsForDrawer] = useState<EventItem[]>([]);
     const [selectedDateForDrawer, setSelectedDateForDrawer] =
         useState<Date | null>(currentDate);
 
@@ -37,7 +36,6 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
 
     const handleOpenDrawer = (date: Date, events: EventItem[]) => {
         setSelectedDateForDrawer(date);
-        setEventsForDrawer(events);
         setIsDrawerOpen(true);
     };
 
@@ -71,6 +69,10 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
         1: "h-[70%]",
         2: "h-[50%]",
     };
+
+    const eventsForSelectedDateInDrawer = selectedDateForDrawer
+        ? eventsByDate[format(selectedDateForDrawer, "yyyy-MM-dd")] || []
+        : [];
 
     return (
         <div>
@@ -154,7 +156,7 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                     open={isDrawerOpen}
                     handleClose={handleCloseDrawer}
                     selectedDate={selectedDateForDrawer}
-                    events={eventsForDrawer}
+                    events={eventsForSelectedDateInDrawer}
                 />
             )}
         </div>
