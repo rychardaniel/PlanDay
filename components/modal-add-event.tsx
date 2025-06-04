@@ -11,6 +11,7 @@ import { ptBR } from "date-fns/locale";
 import MenuItem from "@mui/material/MenuItem";
 import { useEventsTypes } from "@/hooks/useEventsTypes";
 import Button from "@mui/material/Button";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 interface ModalAddEventsProps {
     open: boolean;
@@ -26,6 +27,7 @@ export function ModalAddEvent({
     const [nameEvent, setNameEvent] = useState<string>("");
     const [date, setDate] = useState<Date | null>(selectedDate);
     const [typeEvent, setTypeEvent] = useState<string>("");
+    const [descriptionEvent, setDescriptionEvent] = useState<string>("");
 
     useEffect(() => {
         setDate(selectedDate);
@@ -47,13 +49,49 @@ export function ModalAddEvent({
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
-        console.log("Salvando evento:", {
-            name: nameEvent,
-            date: date ? format(date, "yyyy-MM-dd") : null,
+
+        const eventPayload = {
+            title: nameEvent,
+            date: format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"), // Formato ISO 8601
+            description: descriptionEvent,
             typeId: typeEvent,
-        });
-        // addEventToAPI({ title: nameEvent, date: format(date, "yyyy-MM-dd"), typeId: typeEvent, ... });
-        handleClose(); // Fechar o modal após salvar
+        };
+
+        try {
+            const response = await fetch("/api/events", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(eventPayload),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+
+                console.error("Erro ao salvar evento:", errorData);
+
+                alert(
+                    `Erro ao salvar evento: ${
+                        errorData.message ||
+                        errorData.error ||
+                        response.statusText
+                    }`
+                );
+                return;
+            }
+
+            const newEventFromApi: EventItem = await response.json();
+
+            // onEventAdded(newEventFromApi);
+
+            handleClose();
+        } catch (error) {
+            console.error("Falha ao conectar com o servidor:", error);
+            alert(
+                "Falha ao conectar com o servidor para salvar o evento. Verifique sua conexão."
+            );
+        }
     };
 
     return (
@@ -159,6 +197,19 @@ export function ModalAddEvent({
                                 )}
                             </TextField>
                         </Box>
+                        <TextField
+                            id="description-event-input"
+                            label="Descrição da atividade"
+                            fullWidth
+                            multiline
+                            minRows={1}
+                            maxRows={5}
+                            variant="outlined"
+                            value={descriptionEvent}
+                            onChange={(e) =>
+                                setDescriptionEvent(e.target.value)
+                            }
+                        />
                         <Box
                             sx={{
                                 mt: 3,
@@ -173,9 +224,7 @@ export function ModalAddEvent({
                             <Button
                                 type="submit"
                                 variant="contained"
-                                disabled={
-                                    !nameEvent || !date || !typeEvent || true // Desativado por enquanto
-                                }
+                                disabled={!nameEvent || !date || !typeEvent}
                             >
                                 Salvar Evento
                             </Button>
