@@ -32,7 +32,7 @@ export function ModalAddEvent({
         error: typesError,
     } = useEventTypes();
 
-    const { addEventToDisplay } = useEventsContext();
+    const { refreshMonthOfEvent } = useEventsContext();
 
     const [nameEvent, setNameEvent] = useState<string>("");
     const [dateEvent, setDateEvent] = useState<Date | null>(selectedDate);
@@ -102,7 +102,7 @@ export function ModalAddEvent({
 
             const newEventFromApi: EventItem = await response.json();
 
-            addEventToDisplay(newEventFromApi);
+            refreshMonthOfEvent(newEventFromApi);
 
             handleClose();
         } catch (error) {

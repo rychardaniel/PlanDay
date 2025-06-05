@@ -16,7 +16,7 @@ interface EventsContextProps {
     eventsByDate: EventsByDate;
     isLoadingEvents: boolean; // Opcional: para estado de carregamento durante as buscas
     fetchEventsForMonths: (monthsToLoad: Date[]) => Promise<void>;
-    addEventToDisplay: (newEvent: EventItem) => void;
+    refreshMonthOfEvent: (newEvent: EventItem) => void;
     setEventsByDate: Dispatch<SetStateAction<EventsByDate>>; // Permite manipulação direta se necessário
 }
 
@@ -43,7 +43,7 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
                 return;
             }
 
-            setIsLoadingEvents(true); // Opcional: definir estado de carregamento
+            setIsLoadingEvents(true);
 
             try {
                 for (const monthToFetch of newMonthsToFetch) {
@@ -109,33 +109,25 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
         [fetchedMonthKeys] // A dependência é fetchedMonthKeys. setEventsByDate e setIsLoadingEvents são estáveis.
     );
 
-    const addEventToDisplay = useCallback((newEvent: EventItem) => {
-        const eventDateKey = formatInTimeZone(
-            newEvent.date,
-            "Etc/UTC", // Garanta que o fuso horário seja consistente
-            "yyyy-MM-dd"
-        );
+    // Faz uma nova busca no mês em que os eventos mudaram
+    const refreshMonthOfEvent = useCallback(
+        async (newEvent: EventItem) => {
+            const eventDate = new Date(newEvent.date);
+            const startOfMonthDate = startOfMonth(eventDate);
 
-        setEventsByDate((prevEvents) => {
-            const updatedEventsOnDate = [...(prevEvents[eventDateKey] || [])];
+            // Força o refetch do mês atual ignorando o cache
+            const monthKey = format(startOfMonthDate, "yyyy-MM");
 
-            // Evita adicionar duplicatas se de alguma forma já existir pelo ID
-            if (
-                !updatedEventsOnDate.some(
-                    (existingEvent) => existingEvent.id === newEvent.id
-                )
-            ) {
-                updatedEventsOnDate.push(newEvent);
-                // Opcional: ordene os eventos se a ordem importar
-                // updatedEventsOnDate.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-            }
+            setFetchedMonthKeys((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(monthKey); // Remove para forçar a busca novamente
+                return newSet;
+            });
 
-            return {
-                ...prevEvents,
-                [eventDateKey]: updatedEventsOnDate,
-            };
-        });
-    }, []); // Nenhuma dependência, pois usa apenas setEventsByDate e o argumento newEvent
+            await fetchEventsForMonths([startOfMonthDate]);
+        },
+        [fetchEventsForMonths]
+    );
 
     return (
         <EventsContext.Provider
@@ -143,7 +135,7 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
                 eventsByDate,
                 isLoadingEvents,
                 fetchEventsForMonths,
-                addEventToDisplay,
+                refreshMonthOfEvent,
                 setEventsByDate,
             }}
         >
