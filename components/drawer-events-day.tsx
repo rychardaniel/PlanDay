@@ -10,12 +10,15 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Alert from "@mui/material/Alert";
+import Add from "@mui/icons-material/Add";
+import Delete from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
 import { useThemeMode } from "@/theme/ThemeContext";
 import { ModalAddEvent } from "./modal-add-event";
 import { useState } from "react";
-import { Add } from "@mui/icons-material";
 import { useEventTypes } from "@/context/EventTypesContext";
+import { useEventsContext } from "@/context/EventsContext";
 
 interface DrawerEventsDayProps {
     open: boolean;
@@ -36,6 +39,8 @@ export function DrawerEventsDay({
         error: typesError,
     } = useEventTypes();
 
+    const { refreshMonth } = useEventsContext();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleOpenModal = () => {
@@ -47,6 +52,32 @@ export function DrawerEventsDay({
     };
 
     const { mode } = useThemeMode();
+
+    const handleEditEventById = () => {};
+
+    const handleDeleteEventById = async (eventId: string) => {
+        try {
+            const response = await fetch(`api/events/${eventId}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+
+                console.error("Erro ao excluir evento:", errorData);
+
+                alert(`Erro ao excluir evento: ${errorData.error}`);
+                return;
+            }
+
+            refreshMonth(selectedDate);
+        } catch (error) {
+            console.error("Falha ao conectar com o servidor:", error);
+            alert(
+                "Falha ao conectar com o servidor para excluir o evento. Verifique sua conexão."
+            );
+        }
+    };
 
     const drawerContent = (
         <Box
@@ -171,10 +202,41 @@ export function DrawerEventsDay({
                                             </Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            <Typography>
-                                                {event.description ||
-                                                    "Sem descrição"}
-                                            </Typography>
+                                            <Box sx={{ display: "flex" }}>
+                                                <Box sx={{ width: "85%" }}>
+                                                    <Typography>
+                                                        {event.description ||
+                                                            "Sem descrição"}
+                                                    </Typography>
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        width: "15%",
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={
+                                                            handleEditEventById
+                                                        }
+                                                    >
+                                                        <EditIcon fontSize="small" />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() =>
+                                                            handleDeleteEventById(
+                                                                event.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <Delete fontSize="small" />
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
                                         </AccordionDetails>
                                     </Accordion>
                                 </ListItem>

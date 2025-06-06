@@ -11,6 +11,7 @@ import {
 } from "react";
 import {
     addMonths,
+    addDays,
     endOfMonth,
     format,
     isBefore,
@@ -18,12 +19,11 @@ import {
 } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
-// As interfaces não mudam
 interface EventsContextProps {
     eventsByDate: EventsByDate;
     isLoadingEvents: boolean;
     fetchEventsForMonths: (monthsToLoad: Date[]) => Promise<void>;
-    refreshMonthOfEvent: (newEvent: EventItem) => void;
+    refreshMonth: (data: Date) => void;
     setEventsByDate: Dispatch<SetStateAction<EventsByDate>>;
 }
 
@@ -97,19 +97,21 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
                 // 3. Atualiza o estado dos eventos de uma vez.
                 setEventsByDate((prevEvents) => {
                     const updatedEvents = { ...prevEvents };
-                    for (const dateKey in allNewEvents) {
-                        if (!updatedEvents[dateKey]) {
-                            updatedEvents[dateKey] = [];
+
+                    // a. Limpa todos os eventos do intervalo de datas que foi buscado.
+                    // Isso garante que eventos excluídos sejam removidos do estado.
+                    let currentDateInLoop = overallStartDate;
+                    while (currentDateInLoop <= overallEndDate) {
+                        const dateKey = format(currentDateInLoop, "yyyy-MM-dd");
+                        if (updatedEvents[dateKey]) {
+                            delete updatedEvents[dateKey];
                         }
-                        const existingEventIds = new Set(
-                            updatedEvents[dateKey].map((e) => e.id)
-                        );
-                        const newEventsForDay = allNewEvents[dateKey].filter(
-                            (e) => !existingEventIds.has(e.id)
-                        );
-                        updatedEvents[dateKey].push(...newEventsForDay);
+                        currentDateInLoop = addDays(currentDateInLoop, 1);
                     }
-                    return updatedEvents;
+
+                    // b. Adiciona os novos eventos (já agrupados por data em 'allNewEvents').
+                    // O spread operator garante que os novos dados sobrescrevam os antigos (que já foram limpos).
+                    return { ...updatedEvents, ...allNewEvents };
                 });
 
                 // 4. Adicionar as chaves de TODOS os meses que estavam no intervalo buscado.
@@ -135,9 +137,9 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
         [fetchedMonthKeys]
     );
 
-    const refreshMonthOfEvent = useCallback(
-        async (newEvent: EventItem) => {
-            const eventDate = new Date(newEvent.date);
+    const refreshMonth = useCallback(
+        async (date: Date) => {
+            const eventDate = new Date(date);
             const startOfMonthDate = startOfMonth(eventDate);
             const monthKey = format(startOfMonthDate, "yyyy-MM");
 
@@ -158,7 +160,7 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
                 eventsByDate,
                 isLoadingEvents,
                 fetchEventsForMonths,
-                refreshMonthOfEvent,
+                refreshMonth,
                 setEventsByDate,
             }}
         >

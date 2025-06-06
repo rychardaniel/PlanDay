@@ -1,7 +1,7 @@
 type EventItem = {
     id: string;
     title: string;
-    date: string;
+    date: Date;
     description: string;
     typeId: string;
     created_at: string;
