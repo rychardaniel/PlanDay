@@ -28,7 +28,7 @@ export function MonthViewCalendar() {
         if (months.length > 0) {
             fetchEventsForMonths(months);
         }
-    }, [months]);
+    }, [months, fetchEventsForMonths]);
 
     // Faz a centralização no mês atual no carregamento
     useEffect(() => {
@@ -85,20 +85,20 @@ export function MonthViewCalendar() {
     };
 
     return (
-        <>
+        <div className="bg-fundo-claro-1 dark:bg-fundo-escuro-1 w-full p-4 m-1 sm:m-3 overflow-hidden relative flex flex-col">
             <HeaderMonthViewCalendar />
-            <div className="absolute flex justify-end right-0 pr-4 z-2">
-                <IconButton onClick={centerCurrentMonth}>
-                    <Tooltip title="Centralizar">
-                        <RestartAltIcon color="secondary" />
-                    </Tooltip>
-                </IconButton>
-            </div>
 
             <div
                 ref={scrollContainerRef}
                 className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden pb-9"
             >
+                <div className="absolute flex justify-end right-0 pr-4 z-2">
+                    <IconButton onClick={centerCurrentMonth}>
+                        <Tooltip title="Centralizar">
+                            <RestartAltIcon color="secondary" />
+                        </Tooltip>
+                    </IconButton>
+                </div>
                 <div>
                     <Button onClick={loadPreviousMonths}>
                         Carregar mais 3 meses
@@ -124,6 +124,6 @@ export function MonthViewCalendar() {
                     </Button>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
