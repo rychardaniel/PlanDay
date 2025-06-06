@@ -8,8 +8,9 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEventsContext } from "@/context/EventsContext";
+import { Button } from "@mui/material";
 
-const MAX_MONTHS = 5;
+// const MAX_MONTHS = 5;
 
 export function MonthViewCalendar() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -21,60 +22,44 @@ export function MonthViewCalendar() {
     });
 
     const { eventsByDate, fetchEventsForMonths, isLoadingEvents } =
-        useEventsContext(); // <-- Use o contexto
+        useEventsContext();
 
     useEffect(() => {
         if (months.length > 0) {
             fetchEventsForMonths(months);
         }
-    }, [months, fetchEventsForMonths]);
+    }, [months]);
 
+    // Faz a centralização no mês atual no carregamento
     useEffect(() => {
         if (scrollContainerRef.current && currentMonthRef.current) {
-            const container = scrollContainerRef.current;
-            const target = currentMonthRef.current;
-
-            container.scrollTop = target.offsetTop - container.offsetTop;
+            currentMonthRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         }
     }, []);
 
-    const handleScroll = () => {
-        const container = scrollContainerRef.current;
-        if (!container) return;
+    const loadPreviousMonths = () => {
+        setMonths((prev) => {
+            return [
+                subMonths(months[0], 3),
+                subMonths(months[0], 2),
+                subMonths(months[0], 1),
+                ...prev,
+            ];
+        });
+    };
 
-        const threshold = 300;
-        const atTop = container.scrollTop < threshold;
-        const atBottom =
-            container.scrollHeight -
-                container.scrollTop -
-                container.clientHeight <
-            threshold;
-
-        if (atTop) {
-            setMonths((prev) => {
-                const first = prev[0];
-                const newMonth = subMonths(first, 1);
-                if (prev.some((m) => isSameMonth(m, newMonth))) return prev;
-
-                const updated = [newMonth, ...prev];
-                return updated.length > MAX_MONTHS
-                    ? updated.slice(0, MAX_MONTHS)
-                    : updated;
-            });
-        }
-
-        if (atBottom) {
-            setMonths((prev) => {
-                const last = prev[prev.length - 1];
-                const newMonth = addMonths(last, 1);
-                if (prev.some((m) => isSameMonth(m, newMonth))) return prev;
-
-                const updated = [...prev, newMonth];
-                return updated.length > MAX_MONTHS
-                    ? updated.slice(-MAX_MONTHS)
-                    : updated;
-            });
-        }
+    const loadLaterMonths = () => {
+        setMonths((prev) => {
+            return [
+                ...prev,
+                addMonths(months[months.length - 1], 1),
+                addMonths(months[months.length - 1], 2),
+                addMonths(months[months.length - 1], 3),
+            ];
+        });
     };
 
     const centerCurrentMonth = () => {
@@ -91,10 +76,10 @@ export function MonthViewCalendar() {
         // Timeout para esperar o DOM atualizar com os novos meses
         setTimeout(() => {
             if (scrollContainerRef.current && currentMonthRef.current) {
-                const container = scrollContainerRef.current;
-                const target = currentMonthRef.current;
-
-                container.scrollTop = target.offsetTop - container.offsetTop;
+                currentMonthRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
             }
         }, 100); // pequeno delay para esperar render
     };
@@ -113,8 +98,12 @@ export function MonthViewCalendar() {
             <div
                 ref={scrollContainerRef}
                 className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden pb-9"
-                onScroll={handleScroll}
             >
+                <div>
+                    <Button onClick={loadPreviousMonths}>
+                        Carregar mais 3 meses
+                    </Button>
+                </div>
                 {months.map((month) => {
                     const isCurrentMonth = isSameMonth(month, new Date());
                     return (
@@ -129,6 +118,11 @@ export function MonthViewCalendar() {
                         </div>
                     );
                 })}
+                <div>
+                    <Button onClick={loadLaterMonths}>
+                        Carregar mais 3 meses
+                    </Button>
+                </div>
             </div>
         </>
     );
