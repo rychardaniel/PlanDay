@@ -9,15 +9,22 @@ import {
     SetStateAction,
     Dispatch,
 } from "react";
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import {
+    addMonths,
+    endOfMonth,
+    format,
+    isBefore,
+    startOfMonth,
+} from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
+// As interfaces não mudam
 interface EventsContextProps {
     eventsByDate: EventsByDate;
-    isLoadingEvents: boolean; // Opcional: para estado de carregamento durante as buscas
+    isLoadingEvents: boolean;
     fetchEventsForMonths: (monthsToLoad: Date[]) => Promise<void>;
     refreshMonthOfEvent: (newEvent: EventItem) => void;
-    setEventsByDate: Dispatch<SetStateAction<EventsByDate>>; // Permite manipulação direta se necessário
+    setEventsByDate: Dispatch<SetStateAction<EventsByDate>>;
 }
 
 const EventsContext = createContext<EventsContextProps | undefined>(undefined);
@@ -31,13 +38,10 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchEventsForMonths = useCallback(
         async (monthsToLoad: Date[]) => {
-            const newMonthsToFetch: Date[] = [];
-            for (const monthDate of monthsToLoad) {
-                const monthKey = format(monthDate, "yyyy-MM");
-                if (!fetchedMonthKeys.has(monthKey)) {
-                    newMonthsToFetch.push(monthDate);
-                }
-            }
+            const newMonthsToFetch = monthsToLoad.filter(
+                (monthDate) =>
+                    !fetchedMonthKeys.has(format(monthDate, "yyyy-MM"))
+            );
 
             if (newMonthsToFetch.length === 0) {
                 return;
@@ -46,81 +50,100 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
             setIsLoadingEvents(true);
 
             try {
-                for (const monthToFetch of newMonthsToFetch) {
-                    const monthKey = format(monthToFetch, "yyyy-MM");
-                    const startDate = format(
-                        startOfMonth(monthToFetch),
-                        "yyyy-MM-dd"
+                // 1. Encontrar o intervalo de datas geral para todos os meses a serem buscados.
+                const sortedMonths = [...newMonthsToFetch].sort(
+                    (a, b) => a.getTime() - b.getTime()
+                );
+                const overallStartDate = startOfMonth(sortedMonths[0]);
+                const overallEndDate = endOfMonth(
+                    sortedMonths[sortedMonths.length - 1]
+                );
+
+                const formattedStartDate = format(
+                    overallStartDate,
+                    "yyyy-MM-dd"
+                );
+                const formattedEndDate = format(overallEndDate, "yyyy-MM-dd");
+
+                // 2. Realizar uma ÚNICA requisição para todo o intervalo.
+                const response = await fetch(
+                    `/api/events?start=${formattedStartDate}&end=${formattedEndDate}`
+                );
+
+                if (!response.ok) {
+                    console.error(
+                        `Falha ao buscar eventos de ${formattedStartDate} a ${formattedEndDate}`
                     );
-                    const endDate = format(
-                        endOfMonth(monthToFetch),
-                        "yyyy-MM-dd"
-                    );
-
-                    const response = await fetch(
-                        `/api/events?start=${startDate}&end=${endDate}`
-                    );
-                    if (!response.ok) {
-                        throw new Error(
-                            `Falha ao buscar eventos para ${monthKey}`
-                        );
-                    }
-                    const data: EventsResponse = await response.json();
-
-                    setEventsByDate((prevEvents) => {
-                        const updatedEvents = { ...prevEvents };
-                        data.events.forEach((ev) => {
-                            const eventDateKey = formatInTimeZone(
-                                ev.date,
-                                "Etc/UTC", // Garanta que o fuso horário seja consistente com o backend
-                                "yyyy-MM-dd"
-                            );
-
-                            if (!updatedEvents[eventDateKey]) {
-                                updatedEvents[eventDateKey] = [];
-                            }
-                            if (
-                                !updatedEvents[eventDateKey].some(
-                                    (existingEvent) =>
-                                        existingEvent.id === ev.id
-                                )
-                            ) {
-                                updatedEvents[eventDateKey].push(ev);
-                                // Opcional: ordene os eventos se necessário após adicionar
-                                // updatedEvents[eventDateKey].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-                            }
-                        });
-                        return updatedEvents;
-                    });
-
-                    setFetchedMonthKeys((prevFetchedKeys) => {
-                        const newKeys = new Set(prevFetchedKeys);
-                        newKeys.add(monthKey);
-                        return newKeys;
-                    });
+                    // Em caso de falha, saímos cedo para não atualizar os estados de forma incorreta.
+                    setIsLoadingEvents(false);
+                    return;
                 }
+
+                const data: EventsResponse = await response.json();
+                const allNewEvents: EventsByDate = {};
+
+                data.events.forEach((ev) => {
+                    const eventDateKey = formatInTimeZone(
+                        ev.date,
+                        "Etc/UTC",
+                        "yyyy-MM-dd"
+                    );
+                    if (!allNewEvents[eventDateKey]) {
+                        allNewEvents[eventDateKey] = [];
+                    }
+                    allNewEvents[eventDateKey].push(ev);
+                });
+
+                // 3. Atualiza o estado dos eventos de uma vez.
+                setEventsByDate((prevEvents) => {
+                    const updatedEvents = { ...prevEvents };
+                    for (const dateKey in allNewEvents) {
+                        if (!updatedEvents[dateKey]) {
+                            updatedEvents[dateKey] = [];
+                        }
+                        const existingEventIds = new Set(
+                            updatedEvents[dateKey].map((e) => e.id)
+                        );
+                        const newEventsForDay = allNewEvents[dateKey].filter(
+                            (e) => !existingEventIds.has(e.id)
+                        );
+                        updatedEvents[dateKey].push(...newEventsForDay);
+                    }
+                    return updatedEvents;
+                });
+
+                // 4. Adicionar as chaves de TODOS os meses que estavam no intervalo buscado.
+                setFetchedMonthKeys((prevKeys) => {
+                    const newKeys = new Set(prevKeys);
+                    let currentMonth = overallStartDate;
+                    while (isBefore(currentMonth, overallEndDate)) {
+                        const monthKey = format(currentMonth, "yyyy-MM");
+                        newKeys.add(monthKey);
+                        currentMonth = addMonths(currentMonth, 1);
+                    }
+                    return newKeys;
+                });
             } catch (error) {
-                console.error("Falha ao buscar eventos:", error);
-                // Trate o erro apropriadamente, ex: defina um estado de erro
+                console.error("Falha ao processar a busca de eventos:", error);
             } finally {
-                setIsLoadingEvents(false); // Opcional: limpe o estado de carregamento
+                setIsLoadingEvents(false);
             }
         },
-        [fetchedMonthKeys] // A dependência é fetchedMonthKeys. setEventsByDate e setIsLoadingEvents são estáveis.
+        // A dependência 'fetchedMonthKeys' é necessária pois a função a lê diretamente
+        // no filtro inicial. Isso garante que o hook seja recriado se os meses
+        // já buscados mudarem.
+        [fetchedMonthKeys]
     );
 
-    // Faz uma nova busca no mês em que os eventos mudaram
     const refreshMonthOfEvent = useCallback(
         async (newEvent: EventItem) => {
             const eventDate = new Date(newEvent.date);
             const startOfMonthDate = startOfMonth(eventDate);
-
-            // Força o refetch do mês atual ignorando o cache
             const monthKey = format(startOfMonthDate, "yyyy-MM");
 
             setFetchedMonthKeys((prev) => {
                 const newSet = new Set(prev);
-                newSet.delete(monthKey); // Remove para forçar a busca novamente
+                newSet.delete(monthKey);
                 return newSet;
             });
 
