@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
 import { useThemeMode } from "@/theme/ThemeContext";
 import { ModalAddEvent } from "./modal-add-event";
+import { ModalEditEvent } from "./modal-edit-event copy";
 import { useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
 import { useEventsContext } from "@/context/EventsContext";
@@ -41,19 +42,32 @@ export function DrawerEventsDay({
 
     const { refreshMonth } = useEventsContext();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
+    const [eventEditSelect, setEventEditSelect] = useState<EventItem | null>(
+        null
+    );
+
+    const handleOpenModalAdd = () => {
+        setIsModalAddOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
+    const handleCloseModalAdd = () => {
+        setIsModalAddOpen(false);
+    };
+
+    const handleOpenModalEdit = (event: EventItem) => {
+        setEventEditSelect(event);
+        setIsModalEditOpen(true);
+    };
+
+    const handleCloseModalEdit = () => {
+        setEventEditSelect(null);
+        setIsModalEditOpen(false);
     };
 
     const { mode } = useThemeMode();
-
-    const handleEditEventById = () => {};
 
     const handleDeleteEventById = async (eventId: string) => {
         try {
@@ -107,7 +121,7 @@ export function DrawerEventsDay({
                     <IconButton
                         size="medium"
                         color="primary"
-                        onClick={handleOpenModal}
+                        onClick={handleOpenModalAdd}
                         sx={{
                             position: "absolute",
                             right: "8px",
@@ -219,8 +233,10 @@ export function DrawerEventsDay({
                                                 >
                                                     <IconButton
                                                         size="small"
-                                                        onClick={
-                                                            handleEditEventById
+                                                        onClick={() =>
+                                                            handleOpenModalEdit(
+                                                                event
+                                                            )
                                                         }
                                                     >
                                                         <EditIcon fontSize="small" />
@@ -276,10 +292,17 @@ export function DrawerEventsDay({
                 {drawerContent}
             </Drawer>
             <ModalAddEvent
-                open={isModalOpen}
-                handleClose={handleCloseModal}
+                open={isModalAddOpen}
+                handleClose={handleCloseModalAdd}
                 selectedDate={selectedDate}
             />
+            {eventEditSelect && (
+                <ModalEditEvent
+                    open={isModalEditOpen}
+                    handleClose={handleCloseModalEdit}
+                    originalEvent={eventEditSelect}
+                />
+            )}
         </div>
     );
 }

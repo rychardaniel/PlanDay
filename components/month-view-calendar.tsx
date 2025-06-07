@@ -9,8 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEventsContext } from "@/context/EventsContext";
 import { Button } from "@mui/material";
-
-// const MAX_MONTHS = 5;
+import Add from "@mui/icons-material/Add";
 
 export function MonthViewCalendar() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -87,7 +86,6 @@ export function MonthViewCalendar() {
     return (
         <div className="bg-fundo-claro-1 dark:bg-fundo-escuro-1 w-full p-4 m-1 sm:m-3 overflow-hidden relative flex flex-col">
             <HeaderMonthViewCalendar />
-
             <div
                 ref={scrollContainerRef}
                 className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden pb-9"
@@ -99,9 +97,9 @@ export function MonthViewCalendar() {
                         </Tooltip>
                     </IconButton>
                 </div>
-                <div>
+                <div className="w-full flex justify-center">
                     <Button onClick={loadPreviousMonths}>
-                        Carregar mais 3 meses
+                        <Add fontSize="large" />
                     </Button>
                 </div>
                 {months.map((month) => {
@@ -118,9 +116,9 @@ export function MonthViewCalendar() {
                         </div>
                     );
                 })}
-                <div>
+                <div className="w-full flex justify-center">
                     <Button onClick={loadLaterMonths}>
-                        Carregar mais 3 meses
+                        <Add fontSize="large" />
                     </Button>
                 </div>
             </div>

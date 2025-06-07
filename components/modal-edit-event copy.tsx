@@ -15,17 +15,17 @@ import Button from "@mui/material/Button";
 import { useEventTypes } from "@/context/EventTypesContext";
 import { useEventsContext } from "@/context/EventsContext";
 
-interface ModalAddEventsProps {
+interface ModalEditEventsProps {
     open: boolean;
     handleClose: () => void;
-    selectedDate: Date;
+    originalEvent: EventItem;
 }
 
-export function ModalAddEvent({
+export function ModalEditEvent({
     open,
     handleClose,
-    selectedDate,
-}: ModalAddEventsProps) {
+    originalEvent,
+}: ModalEditEventsProps) {
     const {
         eventTypes: eventTypesData,
         isLoading: isLoadingTypes,
@@ -34,19 +34,17 @@ export function ModalAddEvent({
 
     const { refreshMonth } = useEventsContext();
 
-    const [titleEvent, setTitleEvent] = useState<string>("");
-    const [dateEvent, setDateEvent] = useState<Date | null>(selectedDate);
-    const [typeEvent, setTypeEvent] = useState<string>("");
-    const [descriptionEvent, setDescriptionEvent] = useState<string>("");
+    const [titleEvent, setTitleEvent] = useState<string>(originalEvent.title);
+    const [dateEvent, setDateEvent] = useState<Date | null>(originalEvent.date);
 
-    useEffect(() => {
-        setDateEvent(selectedDate);
-        setTitleEvent("");
-        setTypeEvent("");
-        setDescriptionEvent("");
-    }, [selectedDate, open]);
+    // const [dateEvent, setDateEvent] = useState<Date | null>(
+    //     originalEvent.date ? new Date(originalEvent.date) : null
+    // );
 
-    // const eventTypesData = useEventsTypes();
+    const [typeEvent, setTypeEvent] = useState<string>(originalEvent.typeId);
+    const [descriptionEvent, setDescriptionEvent] = useState<string | null>(
+        originalEvent.description
+    );
 
     // Lógica para lidar com isLoadingTypes e typesError se necessário
     if (isLoadingTypes) {
