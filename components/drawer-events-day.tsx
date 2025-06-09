@@ -38,6 +38,8 @@ export function DrawerEventsDay({
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [eventToEdit, setEventToEdit] = useState<EventItem | null>(null);
+    const [mutatingEventId, setMutatingEventId] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleOpenAddModal = () => {
         setEventToEdit(null);
@@ -54,7 +56,8 @@ export function DrawerEventsDay({
         setEventToEdit(null); // Limpa o evento em edição ao fechar
     };
 
-    const handleCreateEvent = async (eventPayload: any) => {
+    const handleCreateEvent = async (eventPayload: eventPayload) => {
+        setIsSubmitting(true);
         try {
             const response = await fetch("/api/events", {
                 method: "POST",
@@ -67,11 +70,17 @@ export function DrawerEventsDay({
         } catch (error) {
             console.error("Erro ao salvar evento:", error);
             alert(`Erro ao salvar evento: ${error}`);
+        } finally {
+            setIsSubmitting(false);
+            handleCloseModal();
         }
     };
 
     const handleUpdateEvent = async (eventPayload: any) => {
         if (!eventToEdit) return;
+
+        setIsSubmitting(true);
+
         try {
             const response = await fetch(`/api/events/${eventToEdit.id}`, {
                 method: "PUT",
@@ -84,12 +93,17 @@ export function DrawerEventsDay({
         } catch (error) {
             console.error("Erro ao editar evento:", error);
             alert(`Erro ao editar evento: ${error}`);
+        } finally {
+            setIsSubmitting(false);
+            handleCloseModal();
         }
     };
 
     const { mode } = useThemeMode();
 
     const handleDeleteEventById = async (eventId: string) => {
+        setMutatingEventId(eventId);
+
         try {
             const response = await fetch(`api/events/${eventId}`, {
                 method: "DELETE",
@@ -110,6 +124,8 @@ export function DrawerEventsDay({
             alert(
                 "Falha ao conectar com o servidor para excluir o evento. Verifique sua conexão."
             );
+        } finally {
+            setMutatingEventId(null);
         }
     };
 
@@ -258,6 +274,9 @@ export function DrawerEventsDay({
                                                                 event
                                                             )
                                                         }
+                                                        disabled={
+                                                            !!mutatingEventId
+                                                        }
                                                     >
                                                         <EditIcon fontSize="small" />
                                                     </IconButton>
@@ -267,6 +286,9 @@ export function DrawerEventsDay({
                                                             handleDeleteEventById(
                                                                 event.id
                                                             )
+                                                        }
+                                                        disabled={
+                                                            !!mutatingEventId
                                                         }
                                                     >
                                                         <Delete fontSize="small" />
@@ -317,6 +339,7 @@ export function DrawerEventsDay({
                 onSubmit={eventToEdit ? handleUpdateEvent : handleCreateEvent}
                 eventToEdit={eventToEdit}
                 selectedDate={selectedDate}
+                isSubmitting={isSubmitting}
             />
         </div>
     );

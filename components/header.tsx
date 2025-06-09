@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isMenuOpen = Boolean(menuAnchorEl);
 
@@ -31,6 +32,8 @@ export const Header: React.FC = () => {
     };
 
     const handleCreateEvent = async (eventPayload: any) => {
+        setIsSubmitting(true);
+
         try {
             const response = await fetch("/api/events", {
                 method: "POST",
@@ -43,6 +46,9 @@ export const Header: React.FC = () => {
         } catch (error) {
             console.error("Erro ao salvar evento:", error);
             alert(`Erro ao salvar evento: ${error}`);
+        } finally {
+            setIsSubmitting(false);
+            handleCloseModal();
         }
     };
 
@@ -96,6 +102,7 @@ export const Header: React.FC = () => {
                 handleClose={handleCloseModal}
                 selectedDate={new Date()}
                 onSubmit={handleCreateEvent}
+                isSubmitting={isSubmitting}
             />
         </header>
     );

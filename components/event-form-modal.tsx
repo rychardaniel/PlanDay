@@ -15,6 +15,7 @@ import { ptBR } from "date-fns/locale";
 import { format, isValid } from "date-fns";
 import { useEffect, useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface EventPayload {
     title: string;
@@ -29,6 +30,7 @@ interface ModalEventFormProps {
     onSubmit: (eventData: EventPayload) => Promise<void>;
     eventToEdit?: EventItem | null;
     selectedDate: Date;
+    isSubmitting: boolean;
 }
 
 export function EventFormModal({
@@ -37,6 +39,7 @@ export function EventFormModal({
     onSubmit,
     eventToEdit,
     selectedDate,
+    isSubmitting,
 }: ModalEventFormProps) {
     const { eventTypes: eventTypesData } = useEventTypes();
     const isEditMode = Boolean(eventToEdit);
@@ -69,7 +72,7 @@ export function EventFormModal({
             return;
         }
 
-        const eventPayload: EventPayload = {
+        const eventPayload: eventPayload = {
             title: titleEvent,
             date: format(dateEvent, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
             description: descriptionEvent,
@@ -79,16 +82,8 @@ export function EventFormModal({
         await onSubmit(eventPayload);
     };
 
-    const modalTitle = isEditMode
-        ? `Editar evento dia ${
-              dateEvent ? format(dateEvent, "dd/MM/yyyy") : ""
-          }`
-        : `Criar evento para ${
-              dateEvent ? format(dateEvent, "dd/MM/yyyy") : ""
-          }`;
-
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={open} onClose={isSubmitting ? () => {} : handleClose}>
             <Box
                 component="form"
                 onSubmit={handleSubmit}
@@ -112,7 +107,17 @@ export function EventFormModal({
                         sx={{ textAlign: "center" }}
                     >
                         {dateEvent && isValid(dateEvent)
-                            ? modalTitle
+                            ? isEditMode
+                                ? `Editar evento dia ${
+                                      dateEvent
+                                          ? format(dateEvent, "dd/MM/yyyy")
+                                          : ""
+                                  }`
+                                : `Criar evento para ${
+                                      dateEvent
+                                          ? format(dateEvent, "dd/MM/yyyy")
+                                          : ""
+                                  }`
                             : "Selecione uma data válida"}
                     </Typography>
 
@@ -170,15 +175,30 @@ export function EventFormModal({
                             gap: 1,
                         }}
                     >
-                        <Button onClick={handleClose} color="error">
+                        <Button
+                            onClick={handleClose}
+                            color="error"
+                            disabled={isSubmitting}
+                        >
                             Cancelar
                         </Button>
                         <Button
                             type="submit"
                             variant="contained"
-                            disabled={!titleEvent || !dateEvent || !typeEvent}
+                            disabled={
+                                !titleEvent ||
+                                !dateEvent ||
+                                !typeEvent ||
+                                isSubmitting
+                            }
                         >
-                            {isEditMode ? "Salvar Alterações" : "Salvar Evento"}
+                            {isSubmitting ? (
+                                <CircularProgress size={24} color="inherit" />
+                            ) : isEditMode ? (
+                                "Salvar Alterações"
+                            ) : (
+                                "Salvar Evento"
+                            )}
                         </Button>
                     </Box>
                 </Box>
