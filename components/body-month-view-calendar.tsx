@@ -34,7 +34,7 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const handleOpenDrawer = (date: Date, events: EventItem[]) => {
+    const handleOpenDrawer = (date: Date) => {
         setSelectedDateForDrawer(date);
         setIsDrawerOpen(true);
     };
@@ -103,7 +103,7 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                                 key={di}
                                 onClick={
                                     isMonth
-                                        ? () => handleOpenDrawer(date, events)
+                                        ? () => handleOpenDrawer(date)
                                         : () => {}
                                 }
                                 className={`h-18 text-sm flex flex-col justify-between relative ${

@@ -9,9 +9,11 @@ import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MenuIcon from "@mui/icons-material/Menu";
 import ThemeToggleButton from "./ThemeToggleButton";
-import { ModalAddEvent } from "./modal-add-event";
-
+import { EventFormModal } from "./event-form-modal";
+import { useEventsContext } from "@/context/EventsContext";
 export const Header: React.FC = () => {
+    const { refreshMonth } = useEventsContext();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -26,6 +28,22 @@ export const Header: React.FC = () => {
 
     const handleMenuClose = () => {
         setMenuAnchorEl(null);
+    };
+
+    const handleCreateEvent = async (eventPayload: any) => {
+        try {
+            const response = await fetch("/api/events", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(eventPayload),
+            });
+            if (!response.ok) throw new Error((await response.json()).error);
+            refreshMonth(new Date(eventPayload.date));
+            handleCloseModal();
+        } catch (error) {
+            console.error("Erro ao salvar evento:", error);
+            alert(`Erro ao salvar evento: ${error}`);
+        }
     };
 
     return (
@@ -73,10 +91,11 @@ export const Header: React.FC = () => {
                 </div>
             </div>
 
-            <ModalAddEvent
+            <EventFormModal
                 open={isModalOpen}
                 handleClose={handleCloseModal}
                 selectedDate={new Date()}
+                onSubmit={handleCreateEvent}
             />
         </header>
     );

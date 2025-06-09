@@ -15,11 +15,10 @@ import Delete from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
 import { useThemeMode } from "@/theme/ThemeContext";
-import { ModalAddEvent } from "./modal-add-event";
-import { ModalEditEvent } from "./modal-edit-event copy";
 import { useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
 import { useEventsContext } from "@/context/EventsContext";
+import { EventFormModal } from "./event-form-modal"; // Importando o novo componente
 
 interface DrawerEventsDayProps {
     open: boolean;
@@ -34,37 +33,58 @@ export function DrawerEventsDay({
     selectedDate,
     events,
 }: DrawerEventsDayProps) {
-    const {
-        eventTypes: eventTypesData,
-        isLoading: isLoadingTypes,
-        error: typesError,
-    } = useEventTypes();
-
     const { refreshMonth } = useEventsContext();
+    const { eventTypes: eventTypesData } = useEventTypes();
 
-    const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [eventToEdit, setEventToEdit] = useState<EventItem | null>(null);
 
-    const [eventEditSelect, setEventEditSelect] = useState<EventItem | null>(
-        null
-    );
-
-    const handleOpenModalAdd = () => {
-        setIsModalAddOpen(true);
+    const handleOpenAddModal = () => {
+        setEventToEdit(null);
+        setIsModalOpen(true);
     };
 
-    const handleCloseModalAdd = () => {
-        setIsModalAddOpen(false);
+    const handleOpenEditModal = (event: EventItem) => {
+        setEventToEdit(event);
+        setIsModalOpen(true);
     };
 
-    const handleOpenModalEdit = (event: EventItem) => {
-        setEventEditSelect(event);
-        setIsModalEditOpen(true);
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEventToEdit(null); // Limpa o evento em edição ao fechar
     };
 
-    const handleCloseModalEdit = () => {
-        setEventEditSelect(null);
-        setIsModalEditOpen(false);
+    const handleCreateEvent = async (eventPayload: any) => {
+        try {
+            const response = await fetch("/api/events", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(eventPayload),
+            });
+            if (!response.ok) throw new Error((await response.json()).error);
+            refreshMonth(new Date(eventPayload.date));
+            handleCloseModal();
+        } catch (error) {
+            console.error("Erro ao salvar evento:", error);
+            alert(`Erro ao salvar evento: ${error}`);
+        }
+    };
+
+    const handleUpdateEvent = async (eventPayload: any) => {
+        if (!eventToEdit) return;
+        try {
+            const response = await fetch(`/api/events/${eventToEdit.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(eventPayload),
+            });
+            if (!response.ok) throw new Error((await response.json()).error);
+            refreshMonth(new Date(eventPayload.date));
+            handleCloseModal();
+        } catch (error) {
+            console.error("Erro ao editar evento:", error);
+            alert(`Erro ao editar evento: ${error}`);
+        }
     };
 
     const { mode } = useThemeMode();
@@ -121,7 +141,7 @@ export function DrawerEventsDay({
                     <IconButton
                         size="medium"
                         color="primary"
-                        onClick={handleOpenModalAdd}
+                        onClick={handleOpenAddModal}
                         sx={{
                             position: "absolute",
                             right: "8px",
@@ -234,7 +254,7 @@ export function DrawerEventsDay({
                                                     <IconButton
                                                         size="small"
                                                         onClick={() =>
-                                                            handleOpenModalEdit(
+                                                            handleOpenEditModal(
                                                                 event
                                                             )
                                                         }
@@ -291,18 +311,13 @@ export function DrawerEventsDay({
             >
                 {drawerContent}
             </Drawer>
-            <ModalAddEvent
-                open={isModalAddOpen}
-                handleClose={handleCloseModalAdd}
+            <EventFormModal
+                open={isModalOpen}
+                handleClose={handleCloseModal}
+                onSubmit={eventToEdit ? handleUpdateEvent : handleCreateEvent}
+                eventToEdit={eventToEdit}
                 selectedDate={selectedDate}
             />
-            {eventEditSelect && (
-                <ModalEditEvent
-                    open={isModalEditOpen}
-                    handleClose={handleCloseModalEdit}
-                    originalEvent={eventEditSelect}
-                />
-            )}
         </div>
     );
 }

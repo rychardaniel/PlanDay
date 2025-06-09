@@ -1,10 +1,10 @@
 type EventItem = {
     id: string;
     title: string;
-    date: Date;
+    date: string;
     description: string;
     typeId: string;
-    created_at: string;
+    created_at: Date;
 };
 
 type EventsResponse = {
