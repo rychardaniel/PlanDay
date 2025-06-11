@@ -18,7 +18,8 @@ import { useThemeMode } from "@/theme/ThemeContext";
 import { useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
 import { useEventsContext } from "@/context/EventsContext";
-import { EventFormModal } from "./event-form-modal"; // Importando o novo componente
+import { EventFormModal } from "./event-form-modal";
+import tinycolor from "tinycolor2";
 
 interface DrawerEventsDayProps {
     open: boolean;
@@ -194,6 +195,9 @@ export function DrawerEventsDay({
 
                             const colorEvent = type?.color.toString();
 
+                            const colorBgIsDark =
+                                tinycolor(colorEvent).isDark();
+
                             return (
                                 <ListItem
                                     key={event.id}
@@ -247,8 +251,24 @@ export function DrawerEventsDay({
                                                         borderRadius: 3,
                                                         backgroundColor:
                                                             colorEvent,
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "center",
+                                                        alignItems: "center",
                                                     }}
-                                                ></Box>
+                                                >
+                                                    <Typography
+                                                        fontSize={10}
+                                                        color={
+                                                            colorBgIsDark
+                                                                ? "white"
+                                                                : "black"
+                                                            // corTexto
+                                                        }
+                                                    >
+                                                        {type?.name}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
