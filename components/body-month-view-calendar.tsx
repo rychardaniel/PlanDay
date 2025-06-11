@@ -64,10 +64,11 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
         weeks.push(week);
     }
 
-    const eventHeightClasses: Record<number, string> = {
-        0: "h-[90%]",
-        1: "h-[70%]",
-        2: "h-[50%]",
+    const eventStylesClasses: Record<number, string> = {
+        0: "w-full",
+        // 1: "w-[calc(50%+15px)] left-0",
+        1: "w-[57%] left-0",
+        2: "w-[45%]",
     };
 
     const eventsForSelectedDateInDrawer = selectedDateForDrawer
@@ -119,15 +120,17 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                                 <span className="h-auto w-auto absolute bottom-0 right-1 z-1 text-sm sm:text-lg sm:mr-1">
                                     {isMonth ? format(date, "d") : ""}
                                 </span>
-                                <div className="flex flex-col h-full relative">
+                                <div className="flex flex-col h-full relative items-center">
                                     {events.slice(0, 3).map((ev, index) => {
                                         const type = eventTypesData.types.find(
                                             (type) => type.id === ev.typeId
                                         );
 
-                                        const colorEvent = type?.color;
-                                        const height =
-                                            eventHeightClasses[index];
+                                        const colorEvent =
+                                            type?.color?.toString();
+
+                                        const styleForEvent =
+                                            eventStylesClasses[index];
 
                                         return (
                                             <Tooltip
@@ -136,10 +139,10 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                                                 key={ev.id}
                                             >
                                                 <div
-                                                    className={`${height} bottom-0 rounded-t-[30px] w-full absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                                    className={`${styleForEvent} h-4 sm:h-6 rounded-[30px] absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
                                                     style={{
                                                         backgroundColor:
-                                                            colorEvent?.toString(),
+                                                            colorEvent,
                                                     }}
                                                 ></div>
                                             </Tooltip>
