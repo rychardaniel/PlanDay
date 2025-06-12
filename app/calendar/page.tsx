@@ -1,5 +1,5 @@
-import { Header } from "@/components/Header";
-import { Body } from "@/components/Body";
+import { Header } from "@/components/header_temp";
+import { Body } from "@/components/body_temp";
 import { EventTypesProvider } from "@/context/EventTypesContext";
 import { EventsProvider } from "@/context/EventsContext";
 
