@@ -16,18 +16,18 @@ import AddEventButton from "./AddEventButton";
 export const Header: React.FC = () => {
     const { refreshMonth } = useEventsContext();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalConfigOpen, setIsModalConfigOpen] = useState(false);
+    const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
+    const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isMenuOpen = Boolean(menuAnchorEl);
 
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => setIsModalOpen(false);
+    const handleOpenAddEventModal = () => setIsAddEventModalOpen(true);
+    const handleCloseAddEventModal = () => setIsAddEventModalOpen(false);
 
-    const handleOpenModalConfig = () => setIsModalConfigOpen(true);
-    const handleCloseModalConfig = () => setIsModalConfigOpen(false);
+    const handleOpenConfigModal = () => setIsConfigModalOpen(true);
+    const handleCloseConfigModal = () => setIsConfigModalOpen(false);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMenuAnchorEl(event.currentTarget);
@@ -48,13 +48,13 @@ export const Header: React.FC = () => {
             });
             if (!response.ok) throw new Error((await response.json()).error);
             refreshMonth(new Date(eventPayload.date));
-            handleCloseModal();
+            handleCloseAddEventModal();
         } catch (error) {
             console.error("Erro ao salvar evento:", error);
             alert(`Erro ao salvar evento: ${error}`);
         } finally {
             setIsSubmitting(false);
-            handleCloseModal();
+            handleCloseAddEventModal();
         }
     };
 
@@ -85,25 +85,25 @@ export const Header: React.FC = () => {
                             <ThemeToggleButton />
                         </MenuItem>
                         <MenuItem onClick={handleMenuClose}>
-                            <SettingsButton onClick={handleOpenModalConfig} />
+                            <SettingsButton onClick={handleOpenConfigModal} />
                         </MenuItem>
                         <MenuItem onClick={handleMenuClose}>
-                            <AddEventButton onClick={handleOpenModal} />
+                            <AddEventButton onClick={handleOpenAddEventModal} />
                         </MenuItem>
                     </Menu>
                 </div>
             </div>
 
             <EventFormModal
-                open={isModalOpen}
-                handleClose={handleCloseModal}
+                open={isAddEventModalOpen}
+                handleClose={handleCloseAddEventModal}
                 selectedDate={new Date()}
                 onSubmit={handleCreateEvent}
                 isSubmitting={isSubmitting}
             />
             <BasicModal
-                open={isModalConfigOpen}
-                handleClose={handleCloseModalConfig}
+                open={isConfigModalOpen}
+                handleClose={handleCloseConfigModal}
             />
         </header>
     );
