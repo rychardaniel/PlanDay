@@ -5,16 +5,19 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AddIcon from "@mui/icons-material/Add";
-import SettingsIcon from "@mui/icons-material/Settings";
 import MenuIcon from "@mui/icons-material/Menu";
 import ThemeToggleButton from "./ThemeToggleButton";
-import { EventFormModal } from "./event-form-modal";
+import { EventFormModal } from "./EventFormModal";
 import { useEventsContext } from "@/context/EventsContext";
+import BasicModal from "./ConfigModal";
+import SettingsButton from "./SettingsButton";
+import AddEventButton from "./AddEventButton";
+
 export const Header: React.FC = () => {
     const { refreshMonth } = useEventsContext();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalConfigOpen, setIsModalConfigOpen] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,6 +25,9 @@ export const Header: React.FC = () => {
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
+
+    const handleOpenModalConfig = () => setIsModalConfigOpen(true);
+    const handleCloseModalConfig = () => setIsModalConfigOpen(false);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMenuAnchorEl(event.currentTarget);
@@ -31,7 +37,7 @@ export const Header: React.FC = () => {
         setMenuAnchorEl(null);
     };
 
-    const handleCreateEvent = async (eventPayload: any) => {
+    const handleCreateEvent = async (eventPayload: EventPayload) => {
         setIsSubmitting(true);
 
         try {
@@ -79,19 +85,10 @@ export const Header: React.FC = () => {
                             <ThemeToggleButton />
                         </MenuItem>
                         <MenuItem onClick={handleMenuClose}>
-                            <IconButton size="small" color="primary">
-                                <SettingsIcon />
-                            </IconButton>
+                            <SettingsButton onClick={handleOpenModalConfig} />
                         </MenuItem>
-                        <MenuItem
-                            onClick={() => {
-                                handleMenuClose();
-                                handleOpenModal();
-                            }}
-                        >
-                            <IconButton size="small" color="primary">
-                                <AddIcon />
-                            </IconButton>
+                        <MenuItem onClick={handleMenuClose}>
+                            <AddEventButton onClick={handleOpenModal} />
                         </MenuItem>
                     </Menu>
                 </div>
@@ -103,6 +100,10 @@ export const Header: React.FC = () => {
                 selectedDate={new Date()}
                 onSubmit={handleCreateEvent}
                 isSubmitting={isSubmitting}
+            />
+            <BasicModal
+                open={isModalConfigOpen}
+                handleClose={handleCloseModalConfig}
             />
         </header>
     );

@@ -13,12 +13,12 @@ import Alert from "@mui/material/Alert";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { formatDateWithCapitalizedDay } from "@/utils/formatDate";
+import { formatDateWithCapitalizedDay } from "@/utils/format-date";
 import { useThemeMode } from "@/theme/ThemeContext";
 import { useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
 import { useEventsContext } from "@/context/EventsContext";
-import { EventFormModal } from "./event-form-modal";
+import { EventFormModal } from "./EventFormModal";
 import tinycolor from "tinycolor2";
 
 interface DrawerEventsDayProps {
@@ -57,7 +57,7 @@ export function DrawerEventsDay({
         setEventToEdit(null); // Limpa o evento em edição ao fechar
     };
 
-    const handleCreateEvent = async (eventPayload: eventPayload) => {
+    const handleCreateEvent = async (eventPayload: EventPayload) => {
         setIsSubmitting(true);
         try {
             const response = await fetch("/api/events", {
@@ -77,7 +77,7 @@ export function DrawerEventsDay({
         }
     };
 
-    const handleUpdateEvent = async (eventPayload: any) => {
+    const handleUpdateEvent = async (eventPayload: EventPayload) => {
         if (!eventToEdit) return;
 
         setIsSubmitting(true);

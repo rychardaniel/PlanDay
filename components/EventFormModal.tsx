@@ -16,13 +16,7 @@ import { format, isValid } from "date-fns";
 import { useEffect, useState } from "react";
 import { useEventTypes } from "@/context/EventTypesContext";
 import CircularProgress from "@mui/material/CircularProgress";
-
-interface EventPayload {
-    title: string;
-    date: string;
-    description: string;
-    typeId: string;
-}
+import { SxProps, Theme } from "@mui/material/styles";
 
 interface ModalEventFormProps {
     open: boolean;
@@ -32,6 +26,19 @@ interface ModalEventFormProps {
     selectedDate: Date;
     isSubmitting: boolean;
 }
+
+const style: SxProps<Theme> = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 4,
+};
 
 export function EventFormModal({
     open,
@@ -72,7 +79,7 @@ export function EventFormModal({
             return;
         }
 
-        const eventPayload: eventPayload = {
+        const eventPayload: EventPayload = {
             title: titleEvent,
             date: format(dateEvent, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
             description: descriptionEvent,
@@ -84,22 +91,7 @@ export function EventFormModal({
 
     return (
         <Modal open={open} onClose={isSubmitting ? () => {} : handleClose}>
-            <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    boxShadow: 24,
-                    p: 4,
-                    borderRadius: 4,
-                }}
-            >
+            <Box component="form" onSubmit={handleSubmit} sx={style}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Typography
                         variant="h6"

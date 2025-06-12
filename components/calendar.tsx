@@ -1,6 +1,6 @@
 "use client";
 
-import { MonthViewCalendar } from "./month-view-calendar";
+import { MonthViewCalendar } from "./MonthViewCalendar";
 
 export function Calendar() {
     return <MonthViewCalendar />;

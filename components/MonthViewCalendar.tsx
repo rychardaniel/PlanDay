@@ -2,8 +2,8 @@
 
 import { addMonths, subMonths, isSameMonth, startOfMonth } from "date-fns";
 import { useEffect, useRef, useState } from "react";
-import { BodyMonthViewCalendar } from "./body-month-view-calendar";
-import { HeaderMonthViewCalendar } from "./header-month-view-calendar";
+import { BodyMonthViewCalendar } from "./BodyMonthViewCalendar";
+import { HeaderMonthViewCalendar } from "./HeaderMonthViewCalendar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";

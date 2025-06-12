@@ -11,7 +11,7 @@ type EventsResponse = {
     events: EventItem[];
 };
 
-type eventPayload = {
+type EventPayload = {
     title: string;
     date: string;
     description: string;

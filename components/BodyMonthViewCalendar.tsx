@@ -13,7 +13,7 @@ import {
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { DrawerEventsDay } from "./drawer-events-day";
+import { DrawerEventsDay } from "./DrawerEventsDay";
 import { useEventTypes } from "@/context/EventTypesContext";
 
 type Props = {

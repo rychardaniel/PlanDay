@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import LoadingScreen from "@/components/loading-screen";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const LoadingContext = createContext<{ loading: boolean }>({ loading: false });
 
