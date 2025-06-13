@@ -9,7 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { EventFormModal } from "./EventFormModal";
 import { useEventsContext } from "@/context/EventsContext";
-import BasicModal from "./ConfigModal";
+import { ModalConfig } from "./ConfigModal";
 import SettingsButton from "./SettingsButton";
 import AddEventButton from "./AddEventButton";
 
@@ -101,7 +101,7 @@ export const Header: React.FC = () => {
                 onSubmit={handleCreateEvent}
                 isSubmitting={isSubmitting}
             />
-            <BasicModal
+            <ModalConfig
                 open={isConfigModalOpen}
                 handleClose={handleCloseConfigModal}
             />

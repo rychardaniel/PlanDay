@@ -1,11 +1,9 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { SxProps, Theme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { useEventTypes } from "@/context/EventTypesContext";
 
 interface ModalConfigProps {
     open: boolean;
@@ -26,7 +24,9 @@ const style: SxProps<Theme> = {
     borderRadius: 4,
 };
 
-export default function ModalConfig({ open, handleClose }: ModalConfigProps) {
+export function ModalConfig({ open, handleClose }: ModalConfigProps) {
+    const { eventTypes: eventTypesData } = useEventTypes();
+
     return (
         <div>
             <Modal
@@ -41,6 +41,9 @@ export default function ModalConfig({ open, handleClose }: ModalConfigProps) {
                             <Close />
                         </IconButton>
                     </Box>
+                    {eventTypesData.types.map((type) => {
+                        return <div key={String(type.id)}>{type.name}</div>;
+                    })}
                 </Box>
             </Modal>
         </div>
