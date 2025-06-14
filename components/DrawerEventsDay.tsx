@@ -237,7 +237,7 @@ export function DrawerEventsDay({
                                                 <Box
                                                     sx={{
                                                         width: "70%",
-paddingRight: 2,
+paddingRight: 1,
                                                     }}
                                                 >
                                                     <Typography component="span">
