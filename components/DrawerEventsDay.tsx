@@ -236,7 +236,7 @@ export function DrawerEventsDay({
                                             >
                                                 <Box
                                                     sx={{
-                                                        width: "80%",
+                                                        width: "70%",
                                                     }}
                                                 >
                                                     <Typography component="span">
@@ -246,8 +246,9 @@ export function DrawerEventsDay({
 
                                                 <Box
                                                     sx={{
-                                                        width: "60px",
-                                                        height: "25px",
+                                                        width: "30%",
+                                                        p: 1,
+                                                        minHeight: "25px",
                                                         borderRadius: 3,
                                                         backgroundColor:
                                                             colorEvent,
@@ -258,12 +259,11 @@ export function DrawerEventsDay({
                                                     }}
                                                 >
                                                     <Typography
-                                                        fontSize={10}
+                                                        fontSize={11}
                                                         color={
                                                             colorBgIsDark
                                                                 ? "white"
                                                                 : "black"
-                                                            // corTexto
                                                         }
                                                     >
                                                         {type?.name}
