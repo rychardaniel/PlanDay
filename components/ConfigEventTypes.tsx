@@ -7,10 +7,10 @@ export const ConfigEventTypes = () => {
     const { eventTypes: eventTypesData } = useEventTypes();
 
     const columns: GridColDef[] = [
-        { field: "eventTypeName", headerName: "Nome do tipo", width: 300 },
+        { field: "eventTypeName", headerName: "Nome", width: 300 },
         {
             field: "eventTypeColor",
-            headerName: "Cor do tipo",
+            headerName: "Cor",
             width: 120,
             headerAlign: "center",
             renderCell: (params) => (
