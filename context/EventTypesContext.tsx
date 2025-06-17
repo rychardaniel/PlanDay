@@ -6,25 +6,26 @@ import {
     useEffect,
     useState,
     ReactNode,
+    useCallback, // ✨ Adicionado useCallback para otimização
 } from "react";
 
-// 1. Definir a interface para os tipos de evento e o estado de carregamento
-//    (Reutilizando tipos de project/interfaces/Event.ts)
+// 1. Atualizar a interface do Contexto para incluir a função de update
 interface EventTypesContextProps {
-    eventTypes: EventTypes; // EventTypes é { types: EventType[] }
+    eventTypes: EventTypes;
     isLoading: boolean;
     error: Error | null;
+    updateEventType: (updatedType: EventType) => void; // ✨ NOVO: Função para atualizar um item
 }
 
-// 2. Criar o Context com um valor padrão
-//    O valor padrão deve corresponder à estrutura de EventTypesContextProps
+// 2. Atualizar o valor padrão do Contexto
 const EventTypesContext = createContext<EventTypesContextProps>({
-    eventTypes: { types: [] }, // Valor inicial para eventTypes
-    isLoading: true, // Começa como true, pois estaremos carregando os dados
+    eventTypes: { types: [] },
+    isLoading: true,
     error: null,
+    updateEventType: () => {}, // ✨ NOVO: Função placeholder
 });
 
-// 3. Criar o Provedor do Contexto
+// 3. Atualizar o Provedor do Contexto
 export const EventTypesProvider = ({ children }: { children: ReactNode }) => {
     const [eventTypesData, setEventTypesData] = useState<EventTypes>({
         types: [],
@@ -33,30 +34,24 @@ export const EventTypesProvider = ({ children }: { children: ReactNode }) => {
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        // Função para buscar os tipos de evento
         const fetchEventTypes = async () => {
+            // ... sua lógica de fetch continua a mesma
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch("/api/events/types"); // Endpoint da API
+                const response = await fetch("/api/events/types");
                 if (!response.ok) {
                     throw new Error(
                         `Failed to fetch event types: ${response.statusText}`
                     );
                 }
-                const data: EventTypeResponse = await response.json(); // EventTypeResponse é { types: EventType[] }
+                const data: EventTypes = await response.json();
                 setEventTypesData(data);
             } catch (e) {
                 if (e instanceof Error) {
-                    console.error("Error fetching event types:", e);
                     setError(e);
                 } else {
-                    console.error("An unknown error occurred:", e);
-                    setError(
-                        new Error(
-                            "An unknown error occurred while fetching event types"
-                        )
-                    );
+                    setError(new Error("An unknown error occurred"));
                 }
             } finally {
                 setIsLoading(false);
@@ -64,18 +59,42 @@ export const EventTypesProvider = ({ children }: { children: ReactNode }) => {
         };
 
         fetchEventTypes();
-    }, []); // Array de dependências vazio para executar apenas na montagem do provedor
+    }, []);
+
+    // ✨ NOVO: Função para atualizar um tipo de evento no estado local
+    const updateEventType = useCallback((updatedType: EventType) => {
+        setEventTypesData((currentData) => {
+            // Mapeia os tipos existentes
+            const updatedTypes = currentData.types.map((type) => {
+                // Se o ID corresponder, retorna o objeto atualizado
+                if (type.id === updatedType.id) {
+                    return updatedType;
+                }
+                // Caso contrário, retorna o objeto original
+                return type;
+            });
+
+            // Retorna o novo estado com a lista de tipos atualizada
+            return { ...currentData, types: updatedTypes };
+        });
+    }, []); // useCallback com dependências vazias, pois `setEventTypesData` é estável
+
+    // ✨ NOVO: Adiciona a função `updateEventType` ao valor do provedor
+    const value = {
+        eventTypes: eventTypesData,
+        isLoading,
+        error,
+        updateEventType,
+    };
 
     return (
-        <EventTypesContext.Provider
-            value={{ eventTypes: eventTypesData, isLoading, error }}
-        >
+        <EventTypesContext.Provider value={value}>
             {children}
         </EventTypesContext.Provider>
     );
 };
 
-// 4. Criar um hook customizado para facilitar o uso do Contexto
+// 4. O hook customizado não precisa de alterações
 export const useEventTypes = () => {
     const context = useContext(EventTypesContext);
     if (context === undefined) {
