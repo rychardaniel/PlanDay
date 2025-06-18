@@ -84,6 +84,7 @@ export function EventFormModal({
             date: format(dateEvent, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
             description: descriptionEvent,
             typeId: typeEvent,
+            materials: "",
         };
 
         await onSubmit(eventPayload);
