@@ -3,8 +3,9 @@ type EventItem = {
     title: string;
     date: string;
     description: string;
+    materials: string;
     typeId: string;
-    created_at: Date;
+    created_at: string;
 };
 
 type EventsResponse = {
@@ -15,6 +16,7 @@ type EventPayload = {
     title: string;
     date: string;
     description: string;
+    materials: string;
     typeId: string;
 };
 
@@ -22,6 +24,8 @@ type EventType = {
     id: string;
     name: string;
     color: string;
+    status: number;
+    created_at: string;
 };
 
 type EventTypeResponse = {

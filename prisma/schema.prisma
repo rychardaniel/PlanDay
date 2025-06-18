@@ -12,6 +12,7 @@ model Event {
     title       String
     date        DateTime
     description String?
+    materials   String?
     typeId      String
     type        EventType @relation(fields: [typeId], references: [id])
     created_at  DateTime  @default(now())
@@ -20,9 +21,11 @@ model Event {
 }
 
 model EventType {
-    id    String @id @default(uuid())
-    name  String
-    color String
+    id         String   @id @default(uuid())
+    name       String
+    color      String
+    status     Int      @default(1)
+    created_at DateTime @default(now())
 
     events Event[]
 
