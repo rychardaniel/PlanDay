@@ -1,5 +1,3 @@
-// /components/modal-event-form.tsx
-
 "use client";
 
 import Box from "@mui/material/Box";
@@ -141,14 +139,16 @@ export function EventFormModal({
                             value={typeEvent}
                             onChange={(e) => setTypeEvent(e.target.value)}
                         >
-                            {eventTypesData.types?.map((type: EventType) => (
-                                <MenuItem
-                                    key={String(type.id)}
-                                    value={String(type.id)}
-                                >
-                                    {String(type.name)}
-                                </MenuItem>
-                            ))}
+                            {eventTypesData.types
+                                ?.filter((type) => type.status === 1)
+                                ?.map((type: EventType) => (
+                                    <MenuItem
+                                        key={String(type.id)}
+                                        value={String(type.id)}
+                                    >
+                                        {String(type.name)}
+                                    </MenuItem>
+                                ))}
                         </TextField>
                     </Box>
                     <TextField

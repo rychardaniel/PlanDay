@@ -27,6 +27,11 @@ const eventPayloadEdit = z.object({
             invalid_type_error: "A descrição deve ser um texto.",
         })
         .optional(),
+    materials: z
+        .string({
+            invalid_type_error: "Os materias devem ser um texto.",
+        })
+        .optional(),
     typeId: z
         .string({
             required_error: "O ID do tipo é obrigatório.",
@@ -75,7 +80,8 @@ export async function PUT(
         );
     }
 
-    const { title, date, description, typeId } = validationResult.data;
+    const { title, date, description, materials, typeId } =
+        validationResult.data;
 
     try {
         await prisma.event.update({
@@ -84,6 +90,7 @@ export async function PUT(
                 title,
                 date,
                 description,
+                materials,
                 typeId,
             },
         });
