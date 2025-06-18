@@ -73,16 +73,16 @@ export function ModalConfig({ open, handleClose }: ModalConfigProps) {
                         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                             <Tabs value={value} onChange={handleChange}>
                                 <Tab label="Tipos de Eventos" />
-                                <Tab label="Outros" />
+                                {/* <Tab label="Outros" /> */}
                             </Tabs>
                         </Box>
                         <Box sx={{ height: "100%" }}>
                             <TabPanel value={value} index={0}>
                                 <ConfigEventTypes />
                             </TabPanel>
-                            <TabPanel value={value} index={1}>
+                            {/* <TabPanel value={value} index={1}>
                                 Em desenvolvimento
-                            </TabPanel>
+                            </TabPanel> */}
                         </Box>
                     </Box>
                 </Box>
