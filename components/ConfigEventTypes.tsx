@@ -1,14 +1,52 @@
 import { useEventTypes } from "@/context/EventTypesContext";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import {
+    DataGrid,
+    GridColDef,
+    GridRenderEditCellParams,
+} from "@mui/x-data-grid";
 import { ptBR } from "@mui/x-data-grid/locales";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-// interface Row {
-//     id: string;
-//     eventTypeName: string;
-//     eventTypeColor: string;
-// }
+type Row = {
+    id: string;
+    eventTypeName: string;
+    eventTypeColor: string;
+};
+
+const ColorEditInputCell = (props: GridRenderEditCellParams) => {
+    const { id, field, value, api } = props;
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        api.setEditCellValue(
+            { id, field, value: event.target.value.toUpperCase() },
+            event
+        );
+    };
+
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+            }}
+        >
+            <input
+                type="color"
+                value={value}
+                onChange={handleChange}
+                style={{
+                    border: "none",
+                    background: "none",
+                    cursor: "pointer",
+                }}
+            />
+        </Box>
+    );
+};
 
 export const ConfigEventTypes = () => {
     const { eventTypes: eventTypesData, updateEventType } = useEventTypes();
@@ -47,6 +85,7 @@ export const ConfigEventTypes = () => {
                     {params.value}
                 </Box>
             ),
+            renderEditCell: (params) => <ColorEditInputCell {...params} />,
         },
     ];
 
@@ -60,8 +99,12 @@ export const ConfigEventTypes = () => {
 
     const paginationModel = { page: 0, pageSize: 5 };
 
-    const handleProcessRowUpdate = async (newRow: any, oldRow: any) => {
+    const handleProcessRowUpdate = async (newRow: Row, oldRow: Row) => {
         if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
+            return oldRow;
+        }
+
+        if (newRow.eventTypeName.length === 0) {
             return oldRow;
         }
 
@@ -79,7 +122,7 @@ export const ConfigEventTypes = () => {
                 throw new Error("Falha ao atualizar o tipo de evento.");
             }
 
-            const updatedRow: EventType = await response.json();
+            const updatedRow = await response.json();
 
             updateEventType(updatedRow);
 

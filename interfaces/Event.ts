@@ -19,9 +19,9 @@ type EventPayload = {
 };
 
 type EventType = {
-    id: String;
-    name: String;
-    color: String;
+    id: string;
+    name: string;
+    color: string;
 };
 
 type EventTypeResponse = {
