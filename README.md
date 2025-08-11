@@ -1,1 +1,1 @@
-# PlanDay
+# academic-calendar
