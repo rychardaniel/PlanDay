@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
             <div className="w-full max-w-[1400px] flex justify-between items-center">
                 <div className="flex items-center gap-2 text-xl text-black dark:text-white">
                     <CalendarMonthIcon />
-                    <h2 className="cursor-default">Calendário</h2>
+                    <h2 className="cursor-default">PlanDay</h2>
                 </div>
 
                 <div>

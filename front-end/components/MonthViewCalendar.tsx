@@ -72,7 +72,6 @@ export function MonthViewCalendar() {
             return prev;
         });
 
-        // Timeout para esperar o DOM atualizar com os novos meses
         setTimeout(() => {
             if (scrollContainerRef.current && currentMonthRef.current) {
                 currentMonthRef.current?.scrollIntoView({
@@ -112,6 +111,7 @@ export function MonthViewCalendar() {
                             <BodyMonthViewCalendar
                                 currentDate={month}
                                 eventsByDate={eventsByDate}
+                                isLoadingEvents={isLoadingEvents}
                             />
                         </div>
                     );

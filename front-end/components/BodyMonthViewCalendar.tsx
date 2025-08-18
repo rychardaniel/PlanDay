@@ -15,18 +15,27 @@ import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import { DrawerEventsDay } from "./DrawerEventsDay";
 import { useEventTypes } from "@/context/EventTypesContext";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useThemeMode } from "@/theme/ThemeContext";
 
 type Props = {
     currentDate: Date;
     eventsByDate: EventsByDate;
+    isLoadingEvents: boolean;
 };
 
-export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
+export function BodyMonthViewCalendar({
+    currentDate,
+    eventsByDate,
+    isLoadingEvents,
+}: Props) {
     const {
         eventTypes: eventTypesData,
         isLoading: isLoadingTypes,
         error: typesError,
     } = useEventTypes();
+
+    const { mode } = useThemeMode();
 
     const [clientDate, setClientDate] = useState<Date | null>(null);
     const [selectedDateForDrawer, setSelectedDateForDrawer] =
@@ -89,9 +98,9 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                 </div>
                 <hr className="w-full border-fundo-claro-2 dark:border-fundo-especial border-[1.5px] mb-2" />
             </div>
-
             {weeks.map((week, wi) => (
                 <div key={wi} className="grid grid-cols-7">
+                    {}
                     {week.map((date, di) => {
                         const key = format(date, "yyyy-MM-dd");
                         const events = eventsByDate[key] || [];
@@ -120,35 +129,53 @@ export function BodyMonthViewCalendar({ currentDate, eventsByDate }: Props) {
                                 <span className="h-auto w-auto absolute bottom-0 right-1 z-1 text-sm sm:text-lg sm:mr-1">
                                     {isMonth ? format(date, "d") : ""}
                                 </span>
-                                <div className="flex flex-col h-full relative items-center">
-                                    {events.slice(0, 3).map((ev, index) => {
-                                        const type = eventTypesData.types.find(
-                                            (type) => type.id === ev.typeId
-                                        );
+                                {!isLoadingEvents ? (
+                                    <div className="flex flex-col h-full relative items-center">
+                                        {events.slice(0, 3).map((ev, index) => {
+                                            const type =
+                                                eventTypesData.types.find(
+                                                    (type) =>
+                                                        type.id === ev.typeId
+                                                );
 
-                                        const colorEvent =
-                                            type?.color?.toString();
+                                            const colorEvent =
+                                                type?.color?.toString();
 
-                                        const styleForEvent =
-                                            eventStylesClasses[index];
+                                            const styleForEvent =
+                                                eventStylesClasses[index];
 
-                                        return (
-                                            <Tooltip
-                                                title={ev.title}
-                                                arrow
-                                                key={ev.id}
-                                            >
-                                                <div
-                                                    className={`${styleForEvent} h-4 sm:h-6 rounded-[30px] absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
-                                                    style={{
-                                                        backgroundColor:
-                                                            colorEvent,
-                                                    }}
-                                                ></div>
-                                            </Tooltip>
-                                        );
-                                    })}
-                                </div>
+                                            return (
+                                                <Tooltip
+                                                    title={ev.title}
+                                                    arrow
+                                                    key={ev.id}
+                                                >
+                                                    <div
+                                                        className={`${styleForEvent} h-4 sm:h-6 rounded-[30px] absolute text-xs truncate flex justify-center items-center text-black dark:text-white font-normal`}
+                                                        style={{
+                                                            backgroundColor:
+                                                                colorEvent,
+                                                        }}
+                                                    ></div>
+                                                </Tooltip>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    isMonth && (
+                                        <div className="flex flex-col h-full relative items-center justify-center">
+                                            <CircularProgress
+                                                sx={{
+                                                    color:
+                                                        mode == "dark"
+                                                            ? "#fff"
+                                                            : "#000",
+                                                }}
+                                                size={20}
+                                            />
+                                        </div>
+                                    )
+                                )}
                             </div>
                         );
                     })}

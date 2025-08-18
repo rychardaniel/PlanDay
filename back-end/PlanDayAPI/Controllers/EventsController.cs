@@ -13,11 +13,17 @@ public class EventsController : ControllerBase
     {
         _context = context;
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> GetEvents()
+    public async Task<IActionResult> GetEvents([FromQuery] DateTime start, [FromQuery] DateTime end)
     {
-        var events = await _context.Events.ToListAsync();
+        if (start == default || end == default || start >= end)
+            return BadRequest("start and end dates must be valid and start must be before end");
+
+        var events = await _context.Events
+            .Where(x => x.Date >= start && x.Date <= end)
+            .ToListAsync();
+
         return Ok(new { success = true, data = events });
     }
 }
