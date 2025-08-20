@@ -71,8 +71,11 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
                 );
 
                 if (!response.ok) {
+                    const errors = await response.json();
                     console.error(
-                        `Falha ao buscar eventos de ${formattedStartDate} a ${formattedEndDate}`
+                        `Falha ao buscar eventos de ${formattedStartDate} a ${formattedEndDate}: ${JSON.stringify(
+                            errors
+                        )}`
                     );
                     // Em caso de falha, saímos cedo para não atualizar os estados de forma incorreta.
                     setIsLoadingEvents(false);
