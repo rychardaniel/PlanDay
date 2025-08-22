@@ -1,6 +1,0 @@
-@PlanDayAPI_HostAddress = http://localhost:5185
-
-GET {{PlanDayAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

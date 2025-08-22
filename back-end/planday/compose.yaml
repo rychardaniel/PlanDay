@@ -1,0 +1,7 @@
+﻿services:
+  planday-api-temp:
+    image: planday-api-temp
+    build:
+      context: .
+      dockerfile: planday-api-temp/Dockerfile
+

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/planday-api-temp.props" />
+</Project>

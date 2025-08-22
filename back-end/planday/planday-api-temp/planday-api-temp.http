@@ -1,0 +1,6 @@
+@planday_api_temp_HostAddress = http://localhost:5111
+
+GET {{planday_api_temp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

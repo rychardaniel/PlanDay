@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "veRNQzZmjgA=",
+  "success": true,
+  "projectFilePath": "/Users/rychardaniel/Documents/Github/planday/back-end/planday/planday-api-temp/planday-api-temp.csproj",
+  "expectedPackageFiles": [
+    "/Users/rychardaniel/.nuget/packages/microsoft.aspnetcore.openapi/9.0.4/microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
+    "/Users/rychardaniel/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
