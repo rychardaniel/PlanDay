@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("planday-api-temp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c247466305d993f3c2379b7e5029c361ed216975")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fc9ba836381fda7cdaeeef97aa8347f672f3304")]
 [assembly: System.Reflection.AssemblyProductAttribute("planday-api-temp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("planday-api-temp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

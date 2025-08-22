@@ -80,11 +80,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/rychardaniel/Documents/Github/planday/back-end/planday/planday-api-temp/planday-api-temp.csproj",
+      "projectUniqueName": "/Users/rychardaniel/Documents/Github/planday/back-end/planday-api-temp/planday-api-temp.csproj",
       "projectName": "planday-api-temp",
-      "projectPath": "/Users/rychardaniel/Documents/Github/planday/back-end/planday/planday-api-temp/planday-api-temp.csproj",
+      "projectPath": "/Users/rychardaniel/Documents/Github/planday/back-end/planday-api-temp/planday-api-temp.csproj",
       "packagesPath": "/Users/rychardaniel/.nuget/packages/",
-      "outputPath": "/Users/rychardaniel/Documents/Github/planday/back-end/planday/planday-api-temp/obj/",
+      "outputPath": "/Users/rychardaniel/Documents/Github/planday/back-end/planday-api-temp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/rychardaniel/.nuget/NuGet/NuGet.Config"
